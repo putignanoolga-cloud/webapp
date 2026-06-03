@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu — Le Reginelle Pizzeria Napoletana · Verona</title>
+  <meta name="description" content="Scopri il menu de Le Reginelle: pizze napoletane a forno a legna, antipasti, primi piatti, secondi, dolci e vini campani DOP. Autentica tradizione a Verona.">
+  <meta name="keywords" content="menu pizzeria verona, pizza napoletana verona, margherita forno legna, antipasti campani, vini campani verona">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.lereginelle.it/menu.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Le Reginelle — Pizzeria Napoletana">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Menu — Le Reginelle Pizzeria Napoletana · Verona">
+  <meta property="og:description" content="Pizze napoletane a forno a legna, antipasti, primi, secondi, dolci e vini campani. Ingredienti freschi DOP, tradizione autentica da 3 generazioni.">
+  <meta property="og:url" content="https://www.lereginelle.it/menu.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Menu — Le Reginelle Pizzeria Napoletana · Verona">
+  <meta name="twitter:description" content="Pizze napoletane a forno a legna, antipasti, dolci e vini campani. Tradizione autentica a Verona.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "name": "Menu Le Reginelle",
+    "description": "Menu completo della pizzeria napoletana Le Reginelle a Verona: pizze, antipasti, primi, secondi, dolci e vini campani.",
+    "url": "https://www.lereginelle.it/menu.html",
+    "inLanguage": "it",
+    "publisher": {
+      "@type": "Restaurant",
+      "name": "Le Reginelle",
+      "url": "https://www.lereginelle.it",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Via Antonio Guglielmi 5/b",
+        "addressLocality": "Verona",
+        "postalCode": "37132",
+        "addressCountry": "IT"
+      }
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bordeaux: #5B1E24; --bordeaux-dark: #3D1319; --bordeaux-light: #7A2B33;
+      --nero: #111111; --panna: #F8F5F2; --panna-dark: #EDE5D8;
+      --oliva: #556B4F; --beige: #C9A870; --beige-light: #E8D8BE;
+      --text: #1E1208; --text-mid: #4A3028; --nav-h: 80px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--panna); color: var(--text); overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000;
+      padding: 0 6%; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,7,4,0.97); backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(201,168,112,0.1);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400;
+      color: var(--panna); letter-spacing: 1.5px; display: flex; flex-direction: row; align-items: center; gap: 12px; line-height: 1;
+    }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo-img { height: 46px; width: 46px; object-fit: contain; border-radius: 50%; flex-shrink: 0; }
+    .nav-logo small {
+      font-size: 0.47rem; letter-spacing: 5px; text-transform: uppercase;
+      opacity: 0.45; margin-top: 4px; font-family: 'DM Sans', sans-serif; font-weight: 300;
+    }
+    .nav-links { display: none; list-style: none; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(248,245,242,0.65); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--beige); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--panna); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-links a.active { color: var(--panna); }
+    .nav-cta {
+      background: var(--bordeaux) !important; color: var(--panna) !important;
+      padding: 11px 26px; border: 1px solid rgba(201,168,112,0.2); transition: all 0.25s ease !important;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { background: var(--bordeaux-light) !important; }
+    .ham { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; z-index: 1200; background: none; border: none; outline: none; }
+    .ham span { display: block; width: 22px; height: 1.5px; background: var(--panna); transition: all 0.35s ease; }
+    .ham.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .ham.open span:nth-child(2) { opacity: 0; }
+    .ham.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mob-nav {
+      display: none; position: fixed; inset: 0; z-index: 1100; background: #0D0806;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    .mob-nav.open { display: flex; }
+    .mob-nav ul { list-style: none; text-align: center; }
+    .mob-nav ul li a {
+      display: block; padding: 18px 60px;
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,8vw,3rem); font-style: italic;
+      color: var(--panna); opacity: 0.8; transition: opacity 0.2s, color 0.2s;
+    }
+    .mob-nav ul li a:hover { opacity: 1; color: var(--beige); }
+    @media (min-width: 900px) { .ham { display: none; } .nav-links { display: flex; } }
+    @media (max-width: 899px) { .nav-logo-text { display: none; } .nav-logo-img { height: 40px; width: 40px; } }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      padding-top: var(--nav-h); min-height: 38vh;
+      display: flex; align-items: flex-end; justify-content: center;
+      position: relative; overflow: hidden; text-align: center;
+      background: #0D0806;
+    }
+    .page-hero-content { position: relative; z-index: 2; padding: 56px 24px 48px; }
+    .page-hero-eyebrow {
+      font-size: 0.52rem; letter-spacing: 6px; text-transform: uppercase; color: var(--beige);
+      margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 14px;
+    }
+    .page-hero-eyebrow::before, .page-hero-eyebrow::after {
+      content: ''; display: block; width: 36px; height: 1px; background: currentColor; opacity: 0.5;
+    }
+    .page-hero h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(2.5rem, 7vw, 5rem); color: var(--panna); letter-spacing: -0.5px; line-height: 1.05;
+    }
+    .page-hero h1 em { font-style: italic; color: var(--beige); }
+    .page-hero p {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem;
+      color: rgba(248,245,242,0.5); margin-top: 14px;
+    }
+
+    /* ── CATEGORY NAV ── */
+    .cat-nav {
+      position: sticky; top: var(--nav-h); z-index: 900;
+      background: rgba(13,7,4,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,112,0.12);
+      display: flex; justify-content: center; overflow-x: auto; scrollbar-width: none;
+    }
+    .cat-nav::-webkit-scrollbar { display: none; }
+    .cat-btn {
+      flex-shrink: 0; background: none; border: none; cursor: pointer;
+      padding: 16px 24px; color: rgba(248,245,242,0.38);
+      font-family: 'DM Sans', sans-serif; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase; position: relative; transition: color 0.2s;
+    }
+    .cat-btn::after {
+      content: ''; position: absolute; bottom: 0; left: 24px; right: 24px;
+      height: 2px; background: var(--beige); transform: scaleX(0); transition: transform 0.25s ease;
+    }
+    .cat-btn:hover { color: rgba(248,245,242,0.7); }
+    .cat-btn.active { color: var(--beige); }
+    .cat-btn.active::after { transform: scaleX(1); }
+
+    /* ── MENU BODY ── */
+    .menu-body { background: var(--panna); }
+    .cat-section { padding: 72px 6%; max-width: 1100px; margin: 0 auto; }
+    .cat-section + .cat-section { border-top: 1px solid rgba(91,30,36,0.1); }
+
+    /* ── SECTION HEADER ── */
+    .cat-header { text-align: center; margin-bottom: 52px; }
+    .cat-header-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px; background: var(--bordeaux);
+      font-size: 1.2rem; margin-bottom: 16px;
+    }
+    .cat-header h2 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(2rem, 5vw, 3rem); color: var(--nero); line-height: 1.1;
+    }
+    .cat-header h2 em { font-style: italic; color: var(--bordeaux); }
+    .cat-header-rule {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      margin: 14px 0 10px;
+    }
+    .cat-header-rule::before, .cat-header-rule::after {
+      content: ''; display: block; flex: 1; max-width: 80px; height: 1px; background: var(--beige-light);
+    }
+    .cat-header-rule span { color: var(--beige); font-size: 0.7rem; }
+    .cat-desc {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1rem; color: var(--text-mid); opacity: 0.75;
+    }
+
+    /* ── PIZZA GRID ── */
+    .pizza-grid { display: grid; grid-template-columns: 1fr; gap: 0; }
+    @media (min-width: 720px) { .pizza-grid { grid-template-columns: 1fr 1fr; } }
+    .pizza-item {
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(91,30,36,0.08);
+      border-right: 1px solid rgba(91,30,36,0.08);
+      display: flex; flex-direction: column; gap: 6px;
+      transition: background 0.2s;
+    }
+    .pizza-item:hover { background: rgba(91,30,36,0.03); }
+    .pizza-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .pizza-name {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.12rem; font-weight: 600;
+      color: var(--nero); flex: 1;
+    }
+    .pizza-price {
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 500;
+      color: var(--bordeaux); white-space: nowrap; flex-shrink: 0;
+    }
+    .pizza-desc { font-size: 0.73rem; color: var(--text-mid); line-height: 1.6; }
+    .pizza-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .tag {
+      font-size: 0.44rem; letter-spacing: 2px; text-transform: uppercase;
+      padding: 3px 8px; background: rgba(85,107,79,0.1); color: var(--oliva);
+      border: 1px solid rgba(85,107,79,0.25);
+    }
+    .tag.hot { background: rgba(91,30,36,0.08); color: var(--bordeaux); border-color: rgba(91,30,36,0.2); }
+    .tag.dop { background: rgba(201,168,112,0.15); color: #8a6c2e; border-color: rgba(201,168,112,0.35); }
+
+    /* ── ITEM LIST ── */
+    .items-list { display: flex; flex-direction: column; }
+    .item {
+      display: flex; align-items: baseline; gap: 0;
+      padding: 18px 0; border-bottom: 1px solid rgba(91,30,36,0.07);
+    }
+    .item:first-child { border-top: 1px solid rgba(91,30,36,0.07); }
+    .item-body { flex: 1; padding-right: 20px; }
+    .item-name {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600;
+      color: var(--nero); margin-bottom: 5px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .item-desc { font-size: 0.73rem; color: var(--text-mid); line-height: 1.6; }
+    .item-dots {
+      flex: 1; border-bottom: 1px dotted rgba(91,30,36,0.2);
+      margin: 0 10px; min-width: 20px; position: relative; top: -4px;
+    }
+    .item-price {
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 500;
+      color: var(--bordeaux); white-space: nowrap; flex-shrink: 0;
+      align-self: flex-start; padding-top: 2px;
+    }
+
+    /* ── WINE SECTIONS ── */
+    .wine-category { margin-bottom: 40px; }
+    .wine-category:last-child { margin-bottom: 0; }
+    .wine-cat-label {
+      font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--bordeaux); font-weight: 600; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .wine-cat-label::after {
+      content: ''; display: block; flex: 1; height: 1px; background: rgba(91,30,36,0.15);
+    }
+
+    /* ── NOTE ── */
+    .section-note {
+      margin-top: 28px; padding: 16px 20px;
+      border-left: 3px solid var(--beige);
+      background: rgba(201,168,112,0.07);
+      font-size: 0.71rem; color: var(--text-mid); line-height: 1.7; font-style: italic;
+    }
+
+    /* ── CALLOUT ── */
+    .menu-callout { background: var(--nero); padding: 56px 6%; text-align: center; }
+    .menu-callout p {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem;
+      color: rgba(248,245,242,0.55); max-width: 600px; margin: 0 auto 32px; line-height: 1.8;
+    }
+    .btn-primary {
+      background: var(--bordeaux); color: var(--panna); padding: 17px 44px;
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 3.5px; text-transform: uppercase;
+      border: 1px solid transparent; display: inline-block; cursor: pointer; transition: all 0.3s ease;
+    }
+    .btn-primary:hover { background: var(--bordeaux-light); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent; color: var(--panna); padding: 17px 44px;
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 3.5px; text-transform: uppercase;
+      border: 1px solid rgba(248,245,242,0.25); display: inline-block; cursor: pointer; transition: all 0.3s ease;
+    }
+    .btn-outline:hover { border-color: var(--panna); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
+
+    /* ── FOOTER ── */
+    footer { background: #0C0705; color: var(--panna); padding: 48px 6% 32px; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+      border-top: 1px solid rgba(248,245,242,0.06); padding-top: 24px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .footer-bottom p, .footer-bottom a { font-size: 0.62rem; color: rgba(248,245,242,0.25); }
+    .footer-bottom a { transition: color 0.2s; }
+    .footer-bottom a:hover { color: rgba(248,245,242,0.6); }
+
+    /* ── WHATSAPP ── */
+    .wa { position: fixed; bottom: 28px; right: 28px; z-index: 500; width: 54px; height: 54px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: transform 0.2s; }
+    .wa:hover { transform: scale(1.1); }
+    .wa svg { width: 26px; height: 26px; fill: white; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img id="navLogoImg" class="nav-logo-img" src="" alt="Logo Le Reginelle" style="display:none;">
+    <span class="nav-logo-text">Le Reginelle<small>Pizzeria Napoletana · Da 3 Generazioni</small></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#chi-siamo">Chi Siamo</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="index.html#galleria">Galleria</a></li>
+    <li><a href="contatti.html">Contatti</a></li>
+    <li><a href="prenota.html" class="nav-cta">Prenota</a></li>
+  </ul>
+  <button class="ham" id="ham" aria-label="Apri menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <ul>
+    <li><a href="index.html#chi-siamo" onclick="closeMob()">Chi Siamo</a></li>
+    <li><a href="menu.html" onclick="closeMob()">Menu</a></li>
+    <li><a href="index.html#galleria" onclick="closeMob()">Galleria</a></li>
+    <li><a href="contatti.html" onclick="closeMob()">Contatti</a></li>
+    <li><a href="prenota.html" onclick="closeMob()">Prenota</a></li>
+  </ul>
+</div>
+
+<!-- ── PAGE HERO ── -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-eyebrow">Le Reginelle · Verona · Da 3 Generazioni</p>
+    <h1>Il nostro <em>Menu</em></h1>
+    <p>Tradizione napoletana, ingredienti DOP, passione artigianale</p>
+  </div>
+</div>
+
+<!-- ── CATEGORY NAV ── -->
+<nav class="cat-nav">
+  <button class="cat-btn active" data-target="pizze">🍕 Pizze</button>
+  <button class="cat-btn" data-target="antipasti">🫒 Antipasti</button>
+  <button class="cat-btn" data-target="primi">🍝 Primi</button>
+  <button class="cat-btn" data-target="secondi">🥩 Secondi</button>
+  <button class="cat-btn" data-target="contorni">🥗 Contorni</button>
+  <button class="cat-btn" data-target="dolci">🍮 Dolci</button>
+  <button class="cat-btn" data-target="vini">🍷 Vini</button>
+</nav>
+
+<!-- ── MENU BODY ── -->
+<div class="menu-body">
+
+  <div id="pizze" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🍕</div>
+      <h2>Le nostre <em>Pizze</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Impasto a lunga lievitazione 48h · Forno a legna a 450°C · Vera pizza napoletana STG</p>
+    </div>
+    <div class="pizza-grid reveal delay-1" id="grid-pizze"></div>
+    <div class="section-note reveal">
+      Tutte le pizze sono preparate con impasto a lievitazione naturale 48h. Disponibili anche in versione senza glutine (+ € 3,00). Informare il personale di eventuali allergie o intolleranze.
+    </div>
+  </div>
+
+  <div id="antipasti" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🫒</div>
+      <h2>Gli <em>Antipasti</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Sapori autentici della tradizione campana per iniziare il pasto</p>
+    </div>
+    <div class="items-list" id="list-antipasti"></div>
+  </div>
+
+  <div id="primi" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🍝</div>
+      <h2>I <em>Primi</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Pasta fresca e secca della tradizione campana, con i migliori prodotti del territorio</p>
+    </div>
+    <div class="items-list" id="list-primi"></div>
+  </div>
+
+  <div id="secondi" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🥩</div>
+      <h2>I <em>Secondi</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Carne e pesce selezionati, cucinati con sapienza e ingredienti freschi del giorno</p>
+    </div>
+    <div class="items-list" id="list-secondi"></div>
+  </div>
+
+  <div id="contorni" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🥗</div>
+      <h2>I <em>Contorni</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Verdure di stagione e classici della cucina campana</p>
+    </div>
+    <div class="items-list" id="list-contorni"></div>
+  </div>
+
+  <div id="dolci" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🍮</div>
+      <h2>I <em>Dolci</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Pasticceria napoletana autentica — tradizioni dolciarie che raccontano secoli di storia</p>
+    </div>
+    <div class="items-list" id="list-dolci"></div>
+  </div>
+
+  <div id="vini" class="cat-section">
+    <div class="cat-header reveal">
+      <div class="cat-header-icon">🍷</div>
+      <h2>La nostra <em>Carta Vini</em></h2>
+      <div class="cat-header-rule"><span>✦</span></div>
+      <p class="cat-desc">Selezione accurata di vini campani e italiani — il perfetto abbinamento per ogni piatto</p>
+    </div>
+    <div id="vini-groups"></div>
+    <div class="section-note reveal">
+      Vini al calice disponibili — chiedere al personale. Acqua minerale naturale o frizzante € 2,50. Coperto € 2,00 a persona.
+    </div>
+  </div>
+
+</div>
+
+<!-- ── CALLOUT ── -->
+<div class="menu-callout">
+  <p>Tutti i nostri piatti sono realizzati con ingredienti freschi di prima qualità. Per allergie, intolleranze o esigenze alimentari particolari, il personale è a vostra disposizione.</p>
+  <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+    <a href="prenota.html" class="btn-primary">Prenota un Tavolo</a>
+    <a href="contatti.html" class="btn-outline">Contattaci</a>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-bottom">
+    <p>© 2025 Le Reginelle — Via Antonio Guglielmi 5/b, 37132 Verona</p>
+    <div style="display:flex; gap:20px;">
+      <a href="index.html">Home</a>
+      <a href="prenota.html">Prenota</a>
+      <a href="contatti.html">Contatti</a>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/393793790347" class="wa" aria-label="WhatsApp" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  // Apply logo from admin
+  (function(){ var imgs=JSON.parse(localStorage.getItem('lareginella_images')||'{}'); if(imgs.logo){var el=document.getElementById('navLogoImg');if(el){el.src=imgs.logo;el.style.display='block';}} })();
+
+  // ── NAV ──
+  const ham = document.getElementById('ham');
+  const mobNav = document.getElementById('mobNav');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    mobNav.classList.toggle('open');
+    document.body.style.overflow = ham.classList.contains('open') ? 'hidden' : '';
+  });
+  function closeMob() {
+    ham.classList.remove('open'); mobNav.classList.remove('open'); document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(btn.dataset.target);
+      if (target) {
+        const offset = document.querySelector('nav').offsetHeight + document.querySelector('.cat-nav').offsetHeight + 20;
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  const sections = document.querySelectorAll('.cat-section');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 160) current = s.id; });
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.target === current));
+  }, { passive: true });
+
+  // ── MENU DATA ──
+  const DEFAULT_MENU = [
+    // Pizze
+    {id:1,  nome:'Margherita',              cat:'pizze',    prezzo:'9.00',  tag:'Classica',   desc:'Pomodoro San Marzano DOP, fior di latte di Agerola, basilico fresco, olio EVO Ravece'},
+    {id:2,  nome:'Marinara',                cat:'pizze',    prezzo:'7.00',  tag:'Vegan',      desc:'Pomodoro San Marzano, aglio fresco, origano dei Monti Lattari, olio EVO — la più antica'},
+    {id:3,  nome:'Cosacca',                 cat:'pizze',    prezzo:'8.00',  tag:'Storica',    desc:'Pomodoro San Marzano, pecorino romano stagionato, basilico fresco'},
+    {id:4,  nome:'Diavola',                 cat:'pizze',    prezzo:'12.00', tag:'Piccante',   desc:'Pomodoro, fior di latte, salame piccante calabrese DOP, peperoncino fresco'},
+    {id:5,  nome:'Prosciutto e Funghi',     cat:'pizze',    prezzo:'13.00', tag:'',           desc:'Pomodoro, fior di latte, prosciutto cotto IGP, funghi champignon trifolati, basilico'},
+    {id:6,  nome:'Quattro Stagioni',        cat:'pizze',    prezzo:'14.00', tag:'',           desc:'Pomodoro, fior di latte, carciofi, funghi porcini, prosciutto cotto, olive di Gaeta'},
+    {id:7,  nome:'Friarielli e Salsiccia',  cat:'pizze',    prezzo:'14.00', tag:'Napoletana', desc:"Base bianca, fior di latte, friarielli napoletani saltati, salsiccia di suino campano"},
+    {id:8,  nome:'Bufala e Pomodorini',     cat:'pizze',    prezzo:'15.00', tag:'DOP',        desc:'Pomodoro, mozzarella di bufala DOP Campana, pomodorini del Piennolo, basilico, olio EVO'},
+    {id:9,  nome:"'Nduja e Stracciatella", cat:'pizze',    prezzo:'16.00', tag:'Piccante',   desc:"Pomodoro, fior di latte, 'nduja calabrese spalmabile, stracciatella di bufala, cipolla caramellata"},
+    {id:10, nome:'Tartufo e Porcini',       cat:'pizze',    prezzo:'22.00', tag:'Stagionale', desc:'Base bianca, fior di latte, funghi porcini freschi, scaglie di tartufo nero, parmigiano 36 mesi'},
+    // Antipasti
+    {id:11, nome:'Bruschetta al Pomodoro',  cat:'antipasti',prezzo:'6.00',  tag:'',  desc:'Pane casereccio tostato, pomodorini del Piennolo del Vesuvio, aglio, basilico fresco, olio Ravece'},
+    {id:12, nome:'Parmigiana di Melanzane', cat:'antipasti',prezzo:'9.00',  tag:'',  desc:'Melanzane fritte, pomodoro al basilico, fior di latte, parmigiano — il grande classico napoletano'},
+    {id:13, nome:'Frittura Napoletana',     cat:'antipasti',prezzo:'10.00', tag:'',  desc:'Montanare fritte al sugo, crocchè di patate, frittatine di spaghetti al ragù, zeppoline'},
+    {id:14, nome:'Burrata di Puglia',       cat:'antipasti',prezzo:'11.00', tag:'',  desc:'Burrata cremosa su pomodorini arrosto, basilico, riduzione di aceto balsamico IGP, pinoli tostati'},
+    {id:15, nome:'Tagliere Campano',        cat:'antipasti',prezzo:'18.00', tag:'',  desc:'Selezione di salumi DOP campani, formaggi locali stagionati, olive di Gaeta, giardiniera'},
+    // Primi
+    {id:16, nome:'Rigatoni al Ragù Napoletano',          cat:'primi',prezzo:'14.00',tag:'',desc:'Ragù della domenica cotto 8 ore con carne mista, ricotta di pecora, pecorino romano'},
+    {id:17, nome:'Gnocchi alla Sorrentina',               cat:'primi',prezzo:'13.00',tag:'',desc:'Gnocchi di patate fatti a mano, pomodoro San Marzano, fior di latte di Agerola, basilico'},
+    {id:18, nome:'Spaghetti alle Vongole',                cat:'primi',prezzo:'16.00',tag:'',desc:'Vongole veraci freschissime, aglio, peperoncino, Falanghina IGT, prezzemolo'},
+    {id:19, nome:'Linguine allo Scoglio',                 cat:'primi',prezzo:'19.00',tag:'',desc:'Cozze, vongole, gamberi, calamari, pomodorini, vino bianco, prezzemolo'},
+    {id:20, nome:'Pappardelle ai Funghi Porcini e Tartufo',cat:'primi',prezzo:'18.00',tag:'',desc:"Pappardelle fresche all'uovo, porcini di stagione, lamelle di tartufo nero, parmigiano 36 mesi"},
+    // Secondi
+    {id:21, nome:'Polpette al Ragù',    cat:'secondi',prezzo:'14.00',tag:'',desc:'Polpette di carne mista al ragù napoletano, servite con pane casereccio tostato'},
+    {id:22, nome:'Bistecca alla Brace', cat:'secondi',prezzo:'22.00',tag:'',desc:'Taglio scelto di manzo nostrano, brace di legno duro, sale marino, rosmarino fresco, olio EVO'},
+    {id:23, nome:'Branzino al Forno',   cat:'secondi',prezzo:'24.00',tag:'',desc:'Branzino fresco al forno con erbe aromatiche, limone di Sorrento, capperi di Pantelleria'},
+    // Contorni
+    {id:24, nome:'Insalata Mista',        cat:'contorni',prezzo:'5.00',tag:'',desc:'Misticanza fresca di stagione, pomodorini, cetriolo, olive, olio EVO e aceto balsamico'},
+    {id:25, nome:'Friarielli Saltati',    cat:'contorni',prezzo:'6.00',tag:'',desc:'Friarielli napoletani saltati in padella con aglio, olio EVO e peperoncino'},
+    {id:26, nome:'Patate al Forno',       cat:'contorni',prezzo:'5.00',tag:'',desc:'Patate novelle al forno con rosmarino, aglio in camicia, sale grosso e olio EVO'},
+    {id:27, nome:'Melanzane alla Griglia',cat:'contorni',prezzo:'6.00',tag:'',desc:'Melanzane grigliate, menta fresca, aglio, olio EVO e un filo di aceto di vino bianco'},
+    // Dolci
+    {id:28, nome:'Babà al Rum',         cat:'dolci',prezzo:'6.00',tag:'',desc:'Il re dei dolci napoletani, inzuppato nel miglior rum invecchiato, con panna fresca e frutti di bosco'},
+    {id:29, nome:'Sfogliatella Riccia', cat:'dolci',prezzo:'5.00',tag:'',desc:"Pasticceria napoletana autentica, ricotta fresca di pecora, scorza d'arancia candita, cannella"},
+    {id:30, nome:'Tiramisù della Casa', cat:'dolci',prezzo:'7.00',tag:'',desc:'Mascarpone artigianale, savoiardi al rum, espresso napoletano ristretto, cacao amaro Valrhona'},
+    {id:31, nome:'Delizia al Limone',   cat:'dolci',prezzo:'7.00',tag:'',desc:'Torta soffice al limone di Sorrento IGP, crema limone, sciroppo agrumato, panna montata'},
+    {id:32, nome:'Cannolo Siciliano',   cat:'dolci',prezzo:'5.00',tag:'',desc:'Cannolo croccante ripieno di ricotta di pecora fresca, gocce di cioccolato, pistacchi di Bronte'},
+    // Vini
+    {id:33, nome:'Aglianico del Taburno DOC 2019', cat:'vini',prezzo:'28.00',tag:'Rosso',     desc:'Corpo pieno, speziato, note di ciliegia matura, tabacco e cuoio. Perfetto con pizza e carne'},
+    {id:34, nome:'Taurasi DOCG 2018',               cat:'vini',prezzo:'42.00',tag:'Rosso',     desc:'Il "Barolo del Sud" — strutturato, elegante, con sentori di frutta rossa matura'},
+    {id:35, nome:'Fiano di Avellino DOCG 2022',     cat:'vini',prezzo:'26.00',tag:'Bianco',    desc:'Elegante e minerale, con sentori di fiori bianchi, nocciola tostata e pesca matura'},
+    {id:36, nome:'Greco di Tufo DOCG 2022',         cat:'vini',prezzo:'24.00',tag:'Bianco',    desc:'Bouquet di albicocca, mandorla e note minerali. Ideale con pesce e antipasti di mare'},
+    {id:37, nome:'Falanghina del Sannio DOC 2023',  cat:'vini',prezzo:'20.00',tag:'Bianco',    desc:'Fresco e floreale, mela verde, pera e agrumi. Il bianco campano più versatile'},
+    {id:38, nome:'Prosecco DOC Treviso',            cat:'vini',prezzo:'18.00',tag:'Bollicine', desc:'Bollicine eleganti, fresco e fruttato, ideale per aperitivo o inizio pasto'},
+    {id:39, nome:'Champagne Brut NV',               cat:'vini',prezzo:'55.00',tag:'Bollicine', desc:'Selezione di cuvée francesi — per celebrare i momenti speciali con classe e raffinatezza'}
+  ];
+
+  function getMenu() {
+    const stored = localStorage.getItem('lareginella_menu');
+    if (!stored) return DEFAULT_MENU;
+    // Merge: stored items + any DEFAULT_MENU items not present in stored
+    const stored_arr = JSON.parse(stored);
+    const storedIds = new Set(stored_arr.map(m => m.id));
+    const missing = DEFAULT_MENU.filter(m => !storedIds.has(m.id));
+    return [...stored_arr, ...missing];
+  }
+
+  function fmtP(p) { return '€ ' + parseFloat(p).toFixed(2).replace('.', ','); }
+
+  function tagCls(tag) {
+    if (!tag) return '';
+    const t = tag.toLowerCase();
+    if (t.includes('piccante') || t === 'hot') return ' hot';
+    if (t === 'dop' || t === 'igp') return ' dop';
+    return '';
+  }
+
+  function renderMenu() {
+    const items = getMenu();
+
+    // Pizze
+    const pizze = items.filter(m => m.cat === 'pizze');
+    document.getElementById('grid-pizze').innerHTML = pizze.map(m => `
+      <div class="pizza-item">
+        <div class="pizza-row">
+          <span class="pizza-name">${m.nome}</span>
+          <span class="pizza-price">${fmtP(m.prezzo)}</span>
+        </div>
+        <p class="pizza-desc">${m.desc}</p>
+        ${m.tag ? `<div class="pizza-tags"><span class="tag${tagCls(m.tag)}">${m.tag}</span></div>` : ''}
+      </div>`).join('');
+
+    // Standard lists
+    ['antipasti','primi','secondi','contorni','dolci'].forEach(cat => {
+      const el = document.getElementById('list-' + cat);
+      if (!el) return;
+      el.innerHTML = items.filter(m => m.cat === cat).map(m => `
+        <div class="item">
+          <div class="item-body">
+            <p class="item-name">${m.nome}${m.tag ? ` <span class="tag" style="font-size:0.44rem;padding:2px 8px;">${m.tag}</span>` : ''}</p>
+            <p class="item-desc">${m.desc}</p>
+          </div>
+          <span class="item-dots"></span>
+          <span class="item-price">${fmtP(m.prezzo)}</span>
+        </div>`).join('');
+    });
+
+    // Vini grouped
+    const vini = items.filter(m => m.cat === 'vini');
+    const wineGroups = [
+      { label: 'Vini Rossi',  list: vini.filter(v => v.tag === 'Rosso') },
+      { label: 'Vini Bianchi',list: vini.filter(v => v.tag === 'Bianco') },
+      { label: 'Bollicine',   list: vini.filter(v => v.tag === 'Bollicine') },
+      { label: 'Vini',        list: vini.filter(v => !['Rosso','Bianco','Bollicine'].includes(v.tag)) },
+    ].filter(g => g.list.length);
+
+    document.getElementById('vini-groups').innerHTML = wineGroups.map(g => `
+      <div class="wine-category reveal">
+        <p class="wine-cat-label">${g.label}</p>
+        <div class="items-list">
+          ${g.list.map(m => `
+            <div class="item">
+              <div class="item-body">
+                <p class="item-name">${m.nome}</p>
+                <p class="item-desc">${m.desc}</p>
+              </div>
+              <span class="item-dots"></span>
+              <span class="item-price">${fmtP(m.prezzo)}</span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+
+  renderMenu();
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
