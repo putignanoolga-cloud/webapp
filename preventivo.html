@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preventivo — WebApp su Misura</title>
+<meta name="author" content="Putignano Olga">
+<meta name="copyright" content="© 2026 Putignano Olga. Tutti i diritti riservati.">
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* © 2026 Putignano Olga — WebApp su Misura. Tutti i diritti riservati. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #2C1A0E;
+  --blue: #C4621A;
+  --aqua: #D4720A;
+  --gold: #E8935A;
+  --rose: #C45A3A;
+  --violet: #B5763A;
+  --white: #FDF6EE;
+  --off: #F5EDE0;
+  --grey: #9A8070;
+  --dark: #F0E6D8;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--dark);
+  color: var(--navy);
+  overflow-x: hidden;
+  cursor: none;
+  min-height: 100vh;
+}
+
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--aqua);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(196,98,26,0.4);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9998;
+  transition: all 0.35s cubic-bezier(.23,1,.32,1);
+}
+
+#progress {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--aqua), var(--rose));
+  z-index: 1000; transition: width 0.1s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(240,230,216,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(44,26,14,0.08);
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 1.1rem;
+  letter-spacing: -0.03em; color: var(--navy);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--aqua); }
+.nav-back {
+  background: rgba(44,26,14,0.08); color: var(--navy);
+  padding: 0.5rem 1.2rem; border-radius: 50px;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.nav-back:hover { background: rgba(44,26,14,0.15); }
+
+/* HERO */
+.hero {
+  padding: 9rem 2rem 4rem;
+  text-align: center;
+  max-width: 700px; margin: 0 auto;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(196,98,26,0.1); border: 1px solid rgba(196,98,26,0.3);
+  color: var(--aqua); padding: 0.4rem 1rem; border-radius: 50px;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 1.5rem;
+  animation: fadeUp 0.6s ease both;
+}
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800; line-height: 1.05;
+  letter-spacing: -0.03em; color: var(--navy);
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+h1 em { color: var(--aqua); font-style: normal; }
+.hero-sub {
+  font-size: 1.05rem; color: rgba(44,26,14,0.55);
+  line-height: 1.6; margin: 1.2rem auto 0;
+  max-width: 500px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+/* PLANS */
+.plans {
+  max-width: 900px; margin: 4rem auto;
+  padding: 0 2rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+}
+.plan-card {
+  background: white;
+  border: 1px solid rgba(44,26,14,0.1);
+  border-radius: 24px; padding: 2.5rem;
+  position: relative; overflow: hidden;
+  animation: fadeUp 0.6s 0.3s ease both;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.plan-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(44,26,14,0.1); }
+.plan-card.featured {
+  background: var(--navy); color: var(--white);
+  border-color: var(--navy);
+}
+.plan-card.featured .plan-sub,
+.plan-card.featured .plan-feature,
+.plan-card.featured .plan-note { color: rgba(253,246,238,0.65); }
+.plan-card.featured .plan-feature-icon { color: var(--gold); }
+
+.plan-tag {
+  display: inline-block;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 0.3rem 0.8rem;
+  border-radius: 50px; margin-bottom: 1.5rem;
+}
+.plan-tag.base { background: rgba(196,98,26,0.1); color: var(--aqua); }
+.plan-tag.premium { background: rgba(253,246,238,0.15); color: var(--gold); }
+
+.plan-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem; font-weight: 800;
+  letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.plan-sub { font-size: 0.88rem; color: var(--grey); line-height: 1.5; margin-bottom: 1.8rem; }
+
+.plan-price {
+  display: flex; align-items: baseline; gap: 0.3rem;
+  margin-bottom: 0.4rem;
+}
+.plan-price .amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 3.5rem; font-weight: 800; line-height: 1;
+  color: var(--aqua);
+}
+.plan-card.featured .plan-price .amount { color: var(--gold); }
+.plan-price .currency {
+  font-size: 1.4rem; font-weight: 700; color: var(--aqua);
+  margin-bottom: 0.5rem;
+}
+.plan-card.featured .plan-price .currency { color: var(--gold); }
+.plan-price-label {
+  font-size: 0.78rem; color: var(--grey); margin-bottom: 2rem;
+}
+
+.plan-divider {
+  height: 1px; background: rgba(44,26,14,0.08);
+  margin: 1.5rem 0;
+}
+.plan-card.featured .plan-divider { background: rgba(253,246,238,0.12); }
+
+.plan-features { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; }
+.plan-feature {
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  font-size: 0.88rem; color: var(--grey); line-height: 1.4;
+}
+.plan-feature-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+.plan-cta {
+  display: block; width: 100%; text-align: center;
+  padding: 1rem; border-radius: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; cursor: pointer;
+  border: none; transition: transform 0.2s, box-shadow 0.2s;
+}
+.plan-cta.dark {
+  background: var(--navy); color: var(--white);
+}
+.plan-cta.dark:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,26,14,0.25); }
+.plan-cta.light {
+  background: var(--gold); color: var(--navy);
+}
+.plan-cta.light:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,147,90,0.4); }
+
+.plan-note {
+  text-align: center; font-size: 0.72rem; color: var(--grey);
+  margin-top: 0.8rem; line-height: 1.4;
+}
+
+/* INCLUDES badge */
+.plan-includes {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  background: var(--gold); color: var(--navy);
+  font-size: 0.62rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.25rem 0.7rem; border-radius: 50px;
+}
+
+/* FAQ / NOTE */
+.note-section {
+  max-width: 700px; margin: 0 auto 5rem;
+  padding: 0 2rem;
+  animation: fadeUp 0.6s 0.5s ease both;
+}
+.note-section h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem; font-weight: 800;
+  margin-bottom: 1rem; color: var(--navy);
+}
+.note-item {
+  background: white; border: 1px solid rgba(44,26,14,0.08);
+  border-radius: 14px; padding: 1.2rem 1.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.88rem; color: var(--grey); line-height: 1.6;
+}
+.note-item strong { color: var(--navy); display: block; margin-bottom: 0.3rem; font-size: 0.92rem; }
+
+/* FOOTER */
+footer {
+  background: var(--dark);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 0.8rem; color: rgba(44,26,14,0.3);
+  border-top: 1px solid rgba(44,26,14,0.08);
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  nav { padding: 1rem 1.2rem; }
+  .hero { padding: 7rem 1.2rem 2rem; }
+  .plans { grid-template-columns: 1fr; padding: 0 1.2rem; margin: 2rem auto; gap: 1rem; }
+  .plan-card { padding: 1.8rem; }
+  .plan-price .amount { font-size: 2.8rem; }
+  .note-section { padding: 0 1.2rem; }
+  h1 { font-size: clamp(1.9rem, 8vw, 2.8rem); }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">WebApp su <span>Misura</span></a>
+  <a href="index.html" class="nav-back">← Torna alla demo</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">💰 Prezzi trasparenti — nessuna sorpresa</div>
+  <h1>Scegli il piano<br><em>giusto per te.</em></h1>
+  <p class="hero-sub">Abbiamo preparato due soluzioni pensate per strutture come la tua. Scegli quella più adatta e contattaci per partire insieme.</p>
+</div>
+
+<div class="plans">
+
+  <!-- BASE -->
+  <div class="plan-card">
+    <div class="plan-tag base">Tutto incluso</div>
+    <div class="plan-name">WebApp Base</div>
+    <p class="plan-sub">Tutto quello che hai visto nella demo. Pronto in 48 ore, configurato sul layout della tua struttura.</p>
+    <div class="plan-price">
+      <span class="currency">€</span>
+      <span class="amount">350</span>
+    </div>
+    <p class="plan-price-label">una tantum · nessun canone mensile</p>
+    <div class="plan-divider"></div>
+    <div class="plan-features">
+      <div class="plan-feature"><span class="plan-feature-icon">🗺</span>Mappa interattiva fedele alla tua struttura</div>
+      <div class="plan-feature"><span class="plan-feature-icon">📅</span>Prenotazione lettini per data e fascia oraria</div>
+      <div class="plan-feature"><span class="plan-feature-icon">💳</span>Pagamento online integrato (Stripe / PayPal)</div>
+      <div class="plan-feature"><span class="plan-feature-icon">🗂</span>Area admin + export PDF prenotazioni</div>
+      <div class="plan-feature"><span class="plan-feature-icon">📊</span>Dashboard presenze e incassi in tempo reale</div>
+      <div class="plan-feature"><span class="plan-feature-icon">⛅</span>Meteo integrato nell'app</div>
+      <div class="plan-feature"><span class="plan-feature-icon">✅</span>Setup completo incluso · pronto in 48 ore</div>
+    </div>
+    <a href="tel:+393517645354" class="plan-cta dark">📞 Chiama ora — +39 351 7645354</a>
+    <p class="plan-note">Nessun canone mensile. Pagamento una volta sola.</p>
+  </div>
+
+  <!-- PREMIUM -->
+  <div class="plan-card featured">
+    <div class="plan-includes">Su misura</div>
+    <div class="plan-tag premium">Funzioni extra</div>
+    <div class="plan-name">WebApp Premium</div>
+    <p class="plan-sub">Tutto del piano Base, più le funzionalità avanzate su misura per la tua attività.</p>
+    <div class="plan-price">
+      <span class="amount" style="font-size:2.2rem;color:var(--gold)">Su preventivo</span>
+    </div>
+    <p class="plan-price-label" style="color:rgba(253,246,238,0.5)">prezzo personalizzato in base alle funzioni scelte</p>
+    <div class="plan-divider"></div>
+    <div class="plan-features">
+      <div class="plan-feature"><span class="plan-feature-icon">📷</span>QR code fisici all'ingresso della struttura</div>
+      <div class="plan-feature"><span class="plan-feature-icon">🍹</span>Ordinazioni al posto — dal lettino al bar</div>
+      <div class="plan-feature"><span class="plan-feature-icon">🏅</span>Abbonamenti stagionali con posto riservato</div>
+      <div class="plan-feature"><span class="plan-feature-icon">🌍</span>App multilingua (IT · EN · DE · FR)</div>
+      <div class="plan-feature"><span class="plan-feature-icon">📲</span>Integrazione con il tuo sito web esistente</div>
+      <div class="plan-feature"><span class="plan-feature-icon">🔧</span>Modifiche e aggiornamenti continuativi</div>
+    </div>
+    <a href="https://wa.me/393517645354?text=Ciao%2C%20vorrei%20un%20preventivo%20per%20la%20WebApp%20Premium" target="_blank" class="plan-cta light">💬 Scrivici su WhatsApp</a>
+    <p class="plan-note" style="color:rgba(253,246,238,0.45)">Risposta entro poche ore · nessun impegno</p>
+  </div>
+
+</div>
+
+<!-- NOTE -->
+<div class="note-section">
+  <h2>Domande frequenti</h2>
+  <div class="note-item">
+    <strong>Devo avere un sito web già esistente?</strong>
+    No. La WebApp funziona da sola, con un link diretto o QR code. Non serve nessun sito.
+  </div>
+  <div class="note-item">
+    <strong>Quanto tempo ci vuole per partire?</strong>
+    48 ore dalla conferma. Configuriamo noi la mappa della tua struttura — tu non devi fare nulla.
+  </div>
+  <div class="note-item">
+    <strong>I clienti devono scaricare un'app?</strong>
+    No. Si apre direttamente dal browser del telefono. Zero installazioni.
+  </div>
+  <div class="note-item">
+    <strong>I pagamenti arrivano direttamente a me?</strong>
+    Sì. Attraverso Stripe o PayPal, l'incasso va direttamente sul tuo conto.
+  </div>
+  <div class="note-item">
+    <strong>Posso modificare i posti o i prezzi in futuro?</strong>
+    Sì, dalla dashboard admin puoi gestire tutto in autonomia. Per modifiche strutturali contattaci.
+  </div>
+</div>
+
+<footer>
+  © 2026 WebApp su Misura · Tutti i diritti riservati
+</footer>
+
+<script>
+// © 2026 Putignano Olga — Tutti i diritti riservati
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (e.key === 'F12') e.preventDefault();
+  if (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) e.preventDefault();
+  if (e.ctrlKey && ['u','U','s','S'].includes(e.key)) e.preventDefault();
+  if (e.metaKey && ['u','U','s','S'].includes(e.key)) e.preventDefault();
+});
+document.addEventListener('copy', e => {
+  e.clipboardData.setData('text/plain','© 2026 Putignano Olga — WebApp su Misura. Tutti i diritti riservati.');
+  e.preventDefault();
+});
+
+// Cursor
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cur.style.left  = e.clientX - 6 + 'px';
+  cur.style.top   = e.clientY - 6 + 'px';
+  ring.style.left = e.clientX - 18 + 'px';
+  ring.style.top  = e.clientY - 18 + 'px';
+});
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform='scale(2.5)'; ring.style.transform='scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform='scale(1)'; ring.style.transform='scale(1)'; });
+});
+
+// Progress
+const prog = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  prog.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+});
+
+// Reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.style.opacity='1'; });
+}, { threshold: 0.1 });
+</script>
+</body>
+</html>
