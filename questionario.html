@@ -106,18 +106,19 @@ nav {
 
 /* ── MAIN LAYOUT ── */
 .demo-section {
-  max-width: 1100px; margin: 3rem auto 5rem;
+  max-width: 800px; margin: 3rem auto 5rem;
   padding: 0 2rem;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 3rem; align-items: start;
+  display: flex; flex-direction: column;
+  gap: 3rem; align-items: center;
 }
 
 /* Phone mockup */
 .phone-wrapper {
   display: flex; justify-content: center;
   animation: fadeUp 0.7s ease both;
-  position: sticky; top: 7rem;
+  position: static;
 }
+.demo-info { width: 100%; }
 .phone-shell {
   width: 300px;
   background: #1a1a1a;
