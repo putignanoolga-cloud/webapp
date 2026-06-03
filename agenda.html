@@ -152,8 +152,9 @@ nav {
 .browser-frame iframe {
   width: 1200px; height: 860px;
   border: none;
-  transform-origin: top left;
+  transform-origin: top center;
   pointer-events: none;
+  position: absolute; top: 0; left: 50%; margin-left: -600px;
 }
 
 /* Info panel */
@@ -432,6 +433,7 @@ function scaleBrowser() {
     const scale = frame.clientWidth / 1200;
     iframe.style.transform = `scale(${scale})`;
     iframe.style.height = (frame.clientHeight / scale) + 'px';
+    iframe.style.top = '0';
   });
 }
 scaleBrowser();

@@ -152,7 +152,7 @@ nav {
 .phone-screen iframe {
   width: 375px; height: 844px;
   border: none;
-  transform-origin: top left;
+  transform-origin: top center;
   transform: scale(0.8);
   pointer-events: none;
   position: absolute; top: 0; left: 50%;
@@ -527,7 +527,6 @@ function scalePhone() {
     if (!iframe) return;
     const scale = screen.clientWidth / 375;
     iframe.style.transform = `scale(${scale})`;
-    iframe.style.marginLeft = '-187.5px';
     iframe.style.height = (screen.clientHeight / scale) + 'px';
   });
 }
