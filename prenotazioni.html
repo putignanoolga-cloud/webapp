@@ -144,7 +144,7 @@ nav {
   transform-origin: top center;
   pointer-events: none;
   position: absolute; top: 0; left: 50%;
-  transform: translateX(-50%) scale(var(--scale));
+  transform: scale(var(--scale)) translateX(-50%);
 }
 .demo-preview-overlay {
   position: absolute; inset: 0; z-index: 10;
@@ -400,7 +400,7 @@ function scaleIframes() {
     if (!preview || !iframe) return;
     const scale = preview.clientWidth / 375;
     iframe.style.setProperty('--scale', scale);
-    iframe.style.transform = `translateX(-50%) scale(${scale})`;
+    iframe.style.transform = `scale(${scale}) translateX(-50%)`;
     iframe.style.height = (preview.clientHeight / scale) + 'px';
   });
 }
