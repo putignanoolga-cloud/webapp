@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sito Vetrina Ristorante — Esempio Demo · Olga P.</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:   #2C1A0E;
+  --aqua:   #D4720A;
+  --rose:   #C45A3A;
+  --white:  #FDF6EE;
+  --off:    #F5EDE0;
+  --grey:   #9A8070;
+  --dark:   #F0E6D8;
+  --bord:   #5B1E24;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--dark);
+  color: var(--navy);
+  overflow-x: hidden;
+  cursor: none;
+  min-height: 100vh;
+}
+
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--aqua); border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(196,98,26,0.4); border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9998;
+  transition: all 0.35s cubic-bezier(.23,1,.32,1);
+}
+#progress {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--aqua), var(--rose));
+  z-index: 1000; transition: width 0.1s;
+}
+
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(240,230,216,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(44,26,14,0.08);
+}
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.02em;
+  color: var(--navy); text-decoration: none;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.nav-logo .back-arrow { font-size: 0.9rem; opacity: 0.5; transition: opacity 0.2s, transform 0.2s; }
+.nav-logo:hover .back-arrow { opacity: 1; transform: translateX(-3px); }
+.nav-cta {
+  background: var(--navy); color: var(--white);
+  padding: 0.55rem 1.4rem; border-radius: 50px;
+  font-size: 0.85rem; font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,26,14,0.25); }
+
+/* ── HERO ── */
+.page-hero {
+  padding: 7rem 2rem 3rem;
+  max-width: 1100px; margin: 0 auto;
+  text-align: center;
+}
+.page-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(91,30,36,0.1); border: 1px solid rgba(91,30,36,0.25);
+  color: var(--bord); padding: 0.4rem 1rem; border-radius: 50px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 1.5rem;
+  animation: fadeUp 0.6s ease both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.page-hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700;
+  line-height: 1.1; letter-spacing: -0.03em;
+  color: var(--navy); margin-bottom: 1rem;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.page-hero h1 em { color: var(--bord); font-style: normal; }
+.page-hero p {
+  font-size: 1.05rem; color: var(--grey); max-width: 580px;
+  margin: 0 auto; line-height: 1.6;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+/* ── PAGE GRID: sidebar nav + previews ── */
+.demo-layout {
+  max-width: 1100px; margin: 3rem auto 5rem;
+  padding: 0 2rem;
+  display: grid; grid-template-columns: 240px 1fr;
+  gap: 3rem; align-items: start;
+}
+
+/* Sidebar page navigator */
+.page-nav {
+  position: sticky; top: 6rem;
+  animation: fadeUp 0.6s 0.15s ease both;
+}
+.page-nav h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--grey);
+  margin-bottom: 0.8rem;
+}
+.page-nav-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.page-nav-list li a {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.65rem 0.9rem; border-radius: 10px;
+  font-size: 0.85rem; font-weight: 600; color: var(--navy);
+  text-decoration: none; transition: background 0.2s, color 0.2s;
+  border: 1px solid transparent;
+}
+.page-nav-list li a:hover,
+.page-nav-list li a.active {
+  background: var(--white); border-color: rgba(44,26,14,0.08);
+  color: var(--bord);
+}
+.page-nav-list li a .pn-icon { font-size: 1rem; flex-shrink: 0; }
+.page-nav-list li a .pn-label { flex: 1; }
+.page-nav-list li a .pn-arr { opacity: 0.3; font-size: 0.75rem; }
+
+.open-btn {
+  display: block; margin-top: 1.2rem;
+  background: var(--bord); color: var(--white);
+  padding: 0.75rem 1rem; border-radius: 12px;
+  font-size: 0.82rem; font-weight: 700; text-align: center;
+  text-decoration: none; transition: opacity 0.2s, transform 0.2s;
+}
+.open-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* ── BROWSER MOCKUP ── */
+.browser-area { animation: fadeUp 0.7s ease both; }
+
+.browser-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--grey); margin-bottom: 0.7rem;
+}
+.browser-shell {
+  background: #1e1e1e;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+}
+.browser-topbar {
+  background: #2a2a2a;
+  padding: 0.55rem 1rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.r { background: #ff5f57; }
+.dot.y { background: #febc2e; }
+.dot.g { background: #28c840; }
+.browser-url {
+  flex: 1; margin-left: 0.4rem;
+  background: #333; border-radius: 5px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.7rem; color: #aaa; font-family: monospace;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.browser-frame {
+  width: 100%; height: 500px;
+  overflow: hidden; position: relative;
+}
+.browser-frame iframe {
+  width: 1280px; height: 900px;
+  border: none;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* ── FEATURE LIST ── */
+.features-section {
+  margin-top: 3rem;
+}
+.features-section h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem; font-weight: 700; color: var(--navy);
+  letter-spacing: -0.02em; margin-bottom: 1rem;
+}
+.features-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+.feature-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  background: var(--white);
+  border: 1px solid rgba(44,26,14,0.07);
+  border-radius: 14px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.feature-item:hover { border-color: rgba(91,30,36,0.2); transform: translateY(-2px); }
+.feature-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.feature-text h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.83rem; font-weight: 700; color: var(--navy); margin-bottom: 0.15rem;
+}
+.feature-text p { font-size: 0.74rem; color: var(--grey); line-height: 1.4; }
+
+/* Tech row */
+.tech-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  flex-wrap: wrap; margin: 2rem 0 1.5rem;
+}
+.tech-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--grey); margin-right: 0.3rem;
+}
+.tech-badge {
+  font-size: 0.7rem; font-weight: 600; padding: 0.3rem 0.75rem;
+  border-radius: 50px; background: rgba(44,26,14,0.06);
+  color: rgba(44,26,14,0.5);
+}
+
+.demo-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--bord); color: var(--white);
+  padding: 0.9rem 2rem; border-radius: 50px;
+  font-size: 0.9rem; font-weight: 700;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(91,30,36,0.3); }
+.btn-outline {
+  background: transparent; color: var(--navy);
+  border: 1.5px solid rgba(44,26,14,0.2);
+  padding: 0.9rem 2rem; border-radius: 50px;
+  font-size: 0.9rem; font-weight: 600;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-outline:hover { background: rgba(44,26,14,0.05); border-color: rgba(44,26,14,0.35); }
+
+/* ── OTHERS ── */
+.altri-section {
+  background: var(--off); padding: 4rem 2rem;
+}
+.altri-inner { max-width: 1100px; margin: 0 auto; }
+.altri-inner h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.4rem; font-weight: 700; color: var(--navy);
+  margin-bottom: 0.4rem; letter-spacing: -0.02em;
+}
+.altri-inner p { font-size: 0.9rem; color: var(--grey); margin-bottom: 2rem; }
+.altri-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.altra-card {
+  background: var(--white); border: 1px solid rgba(44,26,14,0.08);
+  border-radius: 16px; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-decoration: none; display: flex; flex-direction: column;
+}
+.altra-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(44,26,14,0.1); }
+.altra-thumb {
+  height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
+}
+.altra-body { padding: 1rem 1.2rem; flex: 1; }
+.altra-cat { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--aqua); margin-bottom: 0.3rem; }
+.altra-body h4 { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.altra-body p { font-size: 0.75rem; color: var(--grey); line-height: 1.4; }
+.altra-link { padding: 0.8rem 1.2rem; border-top: 1px solid rgba(44,26,14,0.06); font-size: 0.78rem; font-weight: 700; color: var(--aqua); display: flex; align-items: center; justify-content: space-between; }
+
+/* ── CTA BOTTOM ── */
+.bottom-cta {
+  background: linear-gradient(135deg, #3B100F 0%, #5B1E24 50%, #3B100F 100%);
+  text-align: center; padding: 4rem 2rem; position: relative; overflow: hidden;
+}
+.bottom-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,168,112,0.1) 0%, transparent 70%);
+}
+.bottom-cta h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700;
+  color: var(--white); margin-bottom: 1rem; position: relative; letter-spacing: -0.02em;
+}
+.bottom-cta p { color: rgba(253,246,238,0.5); font-size: 1rem; margin: 0 auto 2rem; max-width: 440px; line-height: 1.6; position: relative; }
+.cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+.btn-cta-primary {
+  background: #C9A870; color: #3B100F;
+  padding: 0.9rem 2rem; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-cta-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(201,168,112,0.35); }
+.btn-cta-outline {
+  background: rgba(253,246,238,0.08); color: var(--white);
+  border: 1px solid rgba(253,246,238,0.2);
+  padding: 0.9rem 2rem; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 500;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: background 0.2s;
+}
+.btn-cta-outline:hover { background: rgba(253,246,238,0.14); }
+
+footer {
+  background: var(--dark); padding: 1.5rem 2rem; text-align: center;
+  font-size: 0.8rem; color: rgba(44,26,14,0.3);
+  border-top: 1px solid rgba(44,26,14,0.08);
+}
+
+@media (max-width: 900px) {
+  .demo-layout { grid-template-columns: 1fr; }
+  .page-nav { position: static; }
+  .page-nav-list { flex-direction: row; flex-wrap: wrap; }
+  .features-grid { grid-template-columns: 1fr; }
+  .altri-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  nav { padding: 1rem 1.2rem; }
+  .page-hero { padding: 6rem 1.2rem 2rem; }
+  .demo-layout { padding: 0 1.2rem; }
+  .browser-frame { height: 320px; }
+  .altri-section { padding: 3rem 1.2rem; }
+  .bottom-cta { padding: 3rem 1.2rem; }
+  .cta-row { flex-direction: column; align-items: center; }
+  .cta-row a { width: 100%; max-width: 320px; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span class="back-arrow">←</span> Olga<span style="color:var(--aqua)">.</span>dev
+  </a>
+  <a href="preventivo.html" class="nav-cta">Preventivo →</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-badge">🍕 Sito Vetrina · Ristoranti &amp; Pizzerie</div>
+  <h1>Un sito completo<br><em>per il tuo ristorante.</em></h1>
+  <p>Homepage con menu interattivo, galleria fotografica, modulo prenotazione a 3 step, pannello admin e pagina contatti con mappa integrata. Tutto su misura per la tua identità.</p>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="demo-layout">
+
+  <!-- SIDEBAR PAGE NAV -->
+  <div class="page-nav">
+    <h3>Pagine del sito</h3>
+    <ul class="page-nav-list">
+      <li>
+        <a href="#" class="active" data-src="reginelle-index.html" data-url="lereginelle.it/index">
+          <span class="pn-icon">🏠</span>
+          <span class="pn-label">Homepage</span>
+          <span class="pn-arr">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-src="reginelle-menu.html" data-url="lereginelle.it/menu">
+          <span class="pn-icon">📋</span>
+          <span class="pn-label">Menu</span>
+          <span class="pn-arr">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-src="reginelle-prenota.html" data-url="lereginelle.it/prenota">
+          <span class="pn-icon">📅</span>
+          <span class="pn-label">Prenotazione</span>
+          <span class="pn-arr">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-src="reginelle-contatti.html" data-url="lereginelle.it/contatti">
+          <span class="pn-icon">📍</span>
+          <span class="pn-label">Contatti</span>
+          <span class="pn-arr">→</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-src="reginelle-admin.html" data-url="lereginelle.it/admin">
+          <span class="pn-icon">🔐</span>
+          <span class="pn-label">Pannello Admin</span>
+          <span class="pn-arr">→</span>
+        </a>
+      </li>
+    </ul>
+    <a href="reginelle-index.html" target="_blank" class="open-btn">Apri in nuova scheda ↗</a>
+  </div>
+
+  <!-- BROWSER + INFO -->
+  <div class="browser-area">
+    <div class="browser-label">Anteprima demo — <span id="current-page-label">Homepage</span></div>
+    <div class="browser-shell">
+      <div class="browser-topbar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+        <div class="browser-url" id="browser-url">lereginelle.it/index</div>
+      </div>
+      <div class="browser-frame">
+        <iframe id="main-iframe" src="reginelle-index.html" title="Demo Le Reginelle"></iframe>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="features-section">
+      <h3>Cosa include il sito</h3>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(91,30,36,0.1)">🏠</div>
+          <div class="feature-text">
+            <h4>Homepage accattivante</h4>
+            <p>Hero con foto a schermo intero, sezione "chi siamo", statistiche, galleria e CTA prenotazione.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(201,168,112,0.15)">🍕</div>
+          <div class="feature-text">
+            <h4>Menu interattivo con tab</h4>
+            <p>Pizze, antipasti, primi, dolci e vini organizzati per categoria con navigazione fluida.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(85,107,79,0.1)">📅</div>
+          <div class="feature-text">
+            <h4>Prenotazione a 3 step</h4>
+            <p>Scegli data/orario, inserisci i dati, conferma. Semplicissimo per i clienti, salvato in database.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(91,30,36,0.08)">🔐</div>
+          <div class="feature-text">
+            <h4>Pannello admin completo</h4>
+            <p>Dashboard con statistiche, gestione prenotazioni, CRUD menu, orari e galleria immagini.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(212,114,10,0.1)">📍</div>
+          <div class="feature-text">
+            <h4>Pagina contatti con mappa</h4>
+            <p>Google Maps integrato, form di contatto, orari e pulsante prenotazione diretta.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(39,174,96,0.1)">🎨</div>
+          <div class="feature-text">
+            <h4>Design personalizzato</h4>
+            <p>Ogni sito viene realizzato con i colori, i font e le foto del tuo locale. Identità unica.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tech-row">
+      <span class="tech-label">Stack:</span>
+      <span class="tech-badge">HTML</span>
+      <span class="tech-badge">CSS</span>
+      <span class="tech-badge">JavaScript</span>
+      <span class="tech-badge">LocalStorage</span>
+      <span class="tech-badge">Admin Panel</span>
+    </div>
+
+    <div class="demo-actions">
+      <a href="reginelle-index.html" target="_blank" class="btn-primary">Apri demo completa ↗</a>
+      <a href="preventivo.html" class="btn-outline">Voglio qualcosa di simile</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ALTRI PROGETTI -->
+<div class="altri-section">
+  <div class="altri-inner">
+    <h3>Guarda anche gli altri esempi</h3>
+    <p>Ogni progetto è costruito su misura — stessa qualità, settore diverso.</p>
+    <div class="altri-grid">
+      <a href="prenotazioni.html" class="altra-card">
+        <div class="altra-thumb" style="background:linear-gradient(135deg,#e8f4fd,#b3d9f7)">🏖</div>
+        <div class="altra-body">
+          <div class="altra-cat">WebApp · Hospitality</div>
+          <h4>Prenotazioni Lettini Online</h4>
+          <p>Mappa interattiva per ombrelloni, area piscina e lettini con pagamento integrato.</p>
+        </div>
+        <div class="altra-link">Vedi esempi <span>→</span></div>
+      </a>
+      <a href="ristorante.html" class="altra-card">
+        <div class="altra-thumb" style="background:linear-gradient(135deg,#fdf0e8,#f5d8c0)">🍽</div>
+        <div class="altra-body">
+          <div class="altra-cat">WebApp · Ristoranti</div>
+          <h4>App Prenotazione Tavoli</h4>
+          <p>Mappa visuale delle sale, slot orari, doppio sitting e pannello admin con PIN.</p>
+        </div>
+        <div class="altra-link">Vedi esempio <span>→</span></div>
+      </a>
+      <a href="preventivo.html" class="altra-card">
+        <div class="altra-thumb" style="background:linear-gradient(135deg,#f5ede0,#e8d5b8)">✦</div>
+        <div class="altra-body">
+          <div class="altra-cat">Il tuo progetto</div>
+          <h4>Hai un'idea diversa?</h4>
+          <p>Costruisco webapp su misura per qualsiasi tipo di attività. Dimmi cosa ti serve.</p>
+        </div>
+        <div class="altra-link" style="color:var(--aqua)">Richiedi preventivo <span>→</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="bottom-cta">
+  <h2>Ti piace quello che vedi?</h2>
+  <p>Posso costruire lo stesso sito per il tuo ristorante, con il tuo brand, i tuoi piatti e i tuoi orari.</p>
+  <div class="cta-row">
+    <a href="preventivo.html" class="btn-cta-primary">✉ Richiedi un preventivo</a>
+    <a href="index.html" class="btn-cta-outline">← Torna al portfolio</a>
+  </div>
+</div>
+
+<footer>
+  © 2026 Olga P. · Web Designer &amp; Developer · Tutti i diritti riservati
+</footer>
+
+<script>
+// ── BROWSER SCALE ──
+function scaleBrowser() {
+  const frames = document.querySelectorAll('.browser-frame');
+  frames.forEach(frame => {
+    const iframe = frame.querySelector('iframe');
+    if (!iframe) return;
+    const scale = frame.clientWidth / 1280;
+    iframe.style.transform = `scale(${scale})`;
+    iframe.style.height = (frame.clientHeight / scale) + 'px';
+  });
+}
+scaleBrowser();
+window.addEventListener('resize', scaleBrowser);
+
+// ── PAGE SWITCHER ──
+const navLinks = document.querySelectorAll('.page-nav-list a');
+const mainIframe = document.getElementById('main-iframe');
+const browserUrl = document.getElementById('browser-url');
+const currentLabel = document.getElementById('current-page-label');
+const openBtn = document.querySelector('.open-btn');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    const src = link.dataset.src;
+    const url = link.dataset.url;
+    const label = link.querySelector('.pn-label').textContent;
+    mainIframe.src = src;
+    browserUrl.textContent = url;
+    currentLabel.textContent = label;
+    openBtn.href = src;
+    scaleBrowser();
+  });
+});
+
+// ── CURSOR ──
+const cur  = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cur.style.left  = e.clientX - 6 + 'px';
+  cur.style.top   = e.clientY - 6 + 'px';
+  ring.style.left = e.clientX - 18 + 'px';
+  ring.style.top  = e.clientY - 18 + 'px';
+});
+document.querySelectorAll('a, .feature-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform = 'scale(2.5)'; ring.style.transform = 'scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform = 'scale(1)';   ring.style.transform = 'scale(1)';   });
+});
+
+// ── SCROLL PROGRESS ──
+const prog = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  prog.style.width = pct + '%';
+});
+</script>
+</body>
+</html>
