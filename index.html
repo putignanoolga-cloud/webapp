@@ -237,10 +237,11 @@ h2 {
 .project-card {
   background: var(--white); border: 1px solid rgba(44,26,14,0.08);
   border-radius: 20px; overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
   display: flex; flex-direction: column;
+  cursor: pointer;
 }
-.project-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(44,26,14,0.12); }
+.project-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(44,26,14,0.12); border-color: rgba(212,114,10,0.25); }
 .project-thumb {
   height: 180px; display: flex; align-items: center; justify-content: center;
   font-size: 3.5rem; position: relative; overflow: hidden;
@@ -559,7 +560,7 @@ footer {
     <div class="portfolio-grid">
 
       <!-- PROGETTO 1 — REALE -->
-      <div class="project-card reveal" style="transition-delay:0.1s">
+      <a href="prenotazioni.html" class="project-card reveal" style="transition-delay:0.1s;text-decoration:none;color:inherit;display:flex;flex-direction:column;">
         <div class="project-thumb" style="background:linear-gradient(135deg,#e8f4fd,#b3d9f7)">
           🏖
           <span class="thumb-label">Live</span>
@@ -576,12 +577,12 @@ footer {
             <span class="tech-badge">JS</span>
             <span class="tech-badge">Stripe</span>
           </div>
-          <a href="prenotazioni.html" class="project-link">Guarda esempi →</a>
+          <span class="project-link">Guarda esempi →</span>
         </div>
-      </div>
+      </a>
 
       <!-- PROGETTO 2 — REALE -->
-      <div class="project-card reveal" style="transition-delay:0.15s">
+      <a href="ristorante.html" class="project-card reveal" style="transition-delay:0.15s;text-decoration:none;color:inherit;display:flex;flex-direction:column;">
         <div class="project-thumb" style="background:linear-gradient(135deg,#1a0d06,#2e1008)">
           🍽
           <span class="thumb-label">Live</span>
@@ -598,12 +599,12 @@ footer {
             <span class="tech-badge">JS</span>
             <span class="tech-badge">SVG</span>
           </div>
-          <a href="ristorante.html" class="project-link">Guarda esempio →</a>
+          <span class="project-link">Guarda esempio →</span>
         </div>
-      </div>
+      </a>
 
       <!-- PROGETTO 3 — SITO VETRINA RISTORANTE -->
-      <div class="project-card reveal" style="transition-delay:0.2s">
+      <a href="sito-ristorante.html" class="project-card reveal" style="transition-delay:0.2s;text-decoration:none;color:inherit;display:flex;flex-direction:column;">
         <div class="project-thumb" style="background:linear-gradient(135deg,#5B1E24 0%,#8B3040 100%);display:flex;align-items:center;justify-content:center;font-size:3rem;">
           🍕
         </div>
@@ -619,12 +620,12 @@ footer {
             <span class="tech-badge">JS</span>
             <span class="tech-badge">Admin</span>
           </div>
-          <a href="sito-ristorante.html" class="project-link">Guarda esempio →</a>
+          <span class="project-link">Guarda esempio →</span>
         </div>
-      </div>
+      </a>
 
       <!-- PROGETTO 4 — QUESTIONARI ONLINE -->
-      <div class="project-card reveal" style="transition-delay:0.25s">
+      <a href="questionario.html" class="project-card reveal" style="transition-delay:0.25s;text-decoration:none;color:inherit;display:flex;flex-direction:column;">
         <div class="project-thumb" style="background:linear-gradient(135deg,#1a2d4a 0%,#F07A25 100%);display:flex;align-items:center;justify-content:center;font-size:3rem;">
           📝
         </div>
@@ -639,12 +640,12 @@ footer {
             <span class="tech-badge">CSS</span>
             <span class="tech-badge">JS</span>
           </div>
-          <a href="questionario.html" class="project-link">Guarda esempio →</a>
+          <span class="project-link">Guarda esempio →</span>
         </div>
-      </div>
+      </a>
 
       <!-- PROGETTO 5 — AGENDA ATTIVITÀ -->
-      <div class="project-card reveal" style="transition-delay:0.3s">
+      <a href="agenda.html" class="project-card reveal" style="transition-delay:0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;">
         <div class="project-thumb" style="background:linear-gradient(135deg,#0D1B2E 0%,#1E3A5F 100%);display:flex;align-items:center;justify-content:center;font-size:3rem;">
           🗓
         </div>
@@ -660,9 +661,9 @@ footer {
             <span class="tech-badge">JS</span>
             <span class="tech-badge">Supabase</span>
           </div>
-          <a href="agenda.html" class="project-link">Guarda esempio →</a>
+          <span class="project-link">Guarda esempio →</span>
         </div>
-      </div>
+      </a>
 
       <!-- PROGETTO 6 — SLOT LIBERO CLIENTE -->
       <div class="project-card placeholder reveal" style="transition-delay:0.35s">
