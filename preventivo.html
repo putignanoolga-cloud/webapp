@@ -3,31 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preventivo — WebApp su Misura</title>
-<meta name="author" content="Putignano Olga">
-<meta name="copyright" content="© 2026 Putignano Olga. Tutti i diritti riservati.">
+<title>Preventivo Gratuito — Olga P.</title>
 <meta name="robots" content="noindex, nofollow">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* © 2026 Putignano Olga — WebApp su Misura. Tutti i diritti riservati. */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --navy: #2C1A0E;
-  --blue: #C4621A;
-  --aqua: #D4720A;
-  --gold: #E8935A;
-  --rose: #C45A3A;
-  --violet: #B5763A;
+  --navy:  #2C1A0E;
+  --aqua:  #D4720A;
+  --rose:  #C45A3A;
   --white: #FDF6EE;
-  --off: #F5EDE0;
-  --grey: #9A8070;
-  --dark: #F0E6D8;
+  --off:   #F5EDE0;
+  --grey:  #9A8070;
+  --dark:  #F0E6D8;
 }
 
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   background: var(--dark);
   color: var(--navy);
   overflow-x: hidden;
@@ -37,225 +31,229 @@ body {
 
 #cursor {
   width: 12px; height: 12px;
-  background: var(--aqua);
-  border-radius: 50%;
+  background: var(--aqua); border-radius: 50%;
   position: fixed; pointer-events: none; z-index: 9999;
-  transition: transform 0.15s ease;
-  mix-blend-mode: multiply;
+  transition: transform 0.15s ease; mix-blend-mode: multiply;
 }
 #cursor-ring {
   width: 36px; height: 36px;
-  border: 1.5px solid rgba(196,98,26,0.4);
-  border-radius: 50%;
+  border: 1.5px solid rgba(196,98,26,0.4); border-radius: 50%;
   position: fixed; pointer-events: none; z-index: 9998;
   transition: all 0.35s cubic-bezier(.23,1,.32,1);
 }
-
 #progress {
   position: fixed; top: 0; left: 0; height: 3px;
   background: linear-gradient(90deg, var(--aqua), var(--rose));
   z-index: 1000; transition: width 0.1s;
 }
 
-/* NAV */
+/* ── NAV ── */
 nav {
   position: fixed; top: 0; width: 100%; z-index: 100;
   padding: 1rem 2rem;
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(240,230,216,0.85);
-  backdrop-filter: blur(20px);
+  background: rgba(240,230,216,0.9); backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(44,26,14,0.08);
 }
 .nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 1.1rem;
-  letter-spacing: -0.03em; color: var(--navy);
-  text-decoration: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.02em;
+  color: var(--navy); text-decoration: none;
+  display: flex; align-items: center; gap: 0.5rem;
 }
-.nav-logo span { color: var(--aqua); }
-.nav-back {
-  background: rgba(44,26,14,0.08); color: var(--navy);
-  padding: 0.5rem 1.2rem; border-radius: 50px;
-  font-size: 0.85rem; font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s;
+.nav-logo .back-arrow { font-size: 0.9rem; opacity: 0.5; transition: opacity 0.2s, transform 0.2s; }
+.nav-logo:hover .back-arrow { opacity: 1; transform: translateX(-3px); }
+.nav-badge {
+  background: rgba(212,114,10,0.1); border: 1px solid rgba(212,114,10,0.25);
+  color: var(--aqua); padding: 0.35rem 1rem; border-radius: 50px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
 }
-.nav-back:hover { background: rgba(44,26,14,0.15); }
 
-/* HERO */
-.hero {
-  padding: 9rem 2rem 4rem;
-  text-align: center;
+/* ── HERO ── */
+.page-hero {
+  padding: 7rem 2rem 3rem;
   max-width: 700px; margin: 0 auto;
+  text-align: center;
 }
-.hero-badge {
+.page-badge {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(196,98,26,0.1); border: 1px solid rgba(196,98,26,0.3);
   color: var(--aqua); padding: 0.4rem 1rem; border-radius: 50px;
-  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
   text-transform: uppercase; margin-bottom: 1.5rem;
   animation: fadeUp 0.6s ease both;
 }
-h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 800; line-height: 1.05;
-  letter-spacing: -0.03em; color: var(--navy);
-  animation: fadeUp 0.6s 0.1s ease both;
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.page-hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700;
+  line-height: 1.1; letter-spacing: -0.03em; color: var(--navy);
+  margin-bottom: 1rem; animation: fadeUp 0.6s 0.1s ease both;
 }
-h1 em { color: var(--aqua); font-style: normal; }
-.hero-sub {
-  font-size: 1.05rem; color: rgba(44,26,14,0.55);
-  line-height: 1.6; margin: 1.2rem auto 0;
-  max-width: 500px;
+.page-hero h1 em { color: var(--aqua); font-style: normal; }
+.page-hero p {
+  font-size: 1rem; color: var(--grey); max-width: 500px;
+  margin: 0 auto; line-height: 1.6;
   animation: fadeUp 0.6s 0.2s ease both;
 }
 
-/* PLANS */
-.plans {
-  max-width: 900px; margin: 4rem auto;
-  padding: 0 2rem;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-}
-.plan-card {
-  background: white;
-  border: 1px solid rgba(44,26,14,0.1);
-  border-radius: 24px; padding: 2.5rem;
-  position: relative; overflow: hidden;
+/* ── TRUST STRIP ── */
+.trust-strip {
+  display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+  margin: 2rem auto 0; max-width: 600px;
   animation: fadeUp 0.6s 0.3s ease both;
-  transition: transform 0.3s, box-shadow 0.3s;
 }
-.plan-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(44,26,14,0.1); }
-.plan-card.featured {
-  background: var(--navy); color: var(--white);
-  border-color: var(--navy);
+.trust-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.82rem; font-weight: 600; color: var(--grey);
 }
-.plan-card.featured .plan-sub,
-.plan-card.featured .plan-feature,
-.plan-card.featured .plan-note { color: rgba(253,246,238,0.65); }
-.plan-card.featured .plan-feature-icon { color: var(--gold); }
+.trust-item span { font-size: 1rem; }
 
-.plan-tag {
-  display: inline-block;
-  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 0.3rem 0.8rem;
-  border-radius: 50px; margin-bottom: 1.5rem;
-}
-.plan-tag.base { background: rgba(196,98,26,0.1); color: var(--aqua); }
-.plan-tag.premium { background: rgba(253,246,238,0.15); color: var(--gold); }
-
-.plan-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.6rem; font-weight: 800;
-  letter-spacing: -0.02em; margin-bottom: 0.5rem;
-}
-.plan-sub { font-size: 0.88rem; color: var(--grey); line-height: 1.5; margin-bottom: 1.8rem; }
-
-.plan-price {
-  display: flex; align-items: baseline; gap: 0.3rem;
-  margin-bottom: 0.4rem;
-}
-.plan-price .amount {
-  font-family: 'Syne', sans-serif;
-  font-size: 3.5rem; font-weight: 800; line-height: 1;
-  color: var(--aqua);
-}
-.plan-card.featured .plan-price .amount { color: var(--gold); }
-.plan-price .currency {
-  font-size: 1.4rem; font-weight: 700; color: var(--aqua);
-  margin-bottom: 0.5rem;
-}
-.plan-card.featured .plan-price .currency { color: var(--gold); }
-.plan-price-label {
-  font-size: 0.78rem; color: var(--grey); margin-bottom: 2rem;
-}
-
-.plan-divider {
-  height: 1px; background: rgba(44,26,14,0.08);
-  margin: 1.5rem 0;
-}
-.plan-card.featured .plan-divider { background: rgba(253,246,238,0.12); }
-
-.plan-features { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; }
-.plan-feature {
-  display: flex; align-items: flex-start; gap: 0.7rem;
-  font-size: 0.88rem; color: var(--grey); line-height: 1.4;
-}
-.plan-feature-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
-
-.plan-cta {
-  display: block; width: 100%; text-align: center;
-  padding: 1rem; border-radius: 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem; font-weight: 700;
-  text-decoration: none; cursor: pointer;
-  border: none; transition: transform 0.2s, box-shadow 0.2s;
-}
-.plan-cta.dark {
-  background: var(--navy); color: var(--white);
-}
-.plan-cta.dark:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,26,14,0.25); }
-.plan-cta.light {
-  background: var(--gold); color: var(--navy);
-}
-.plan-cta.light:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,147,90,0.4); }
-
-.plan-note {
-  text-align: center; font-size: 0.72rem; color: var(--grey);
-  margin-top: 0.8rem; line-height: 1.4;
-}
-
-/* INCLUDES badge */
-.plan-includes {
-  position: absolute; top: 1.5rem; right: 1.5rem;
-  background: var(--gold); color: var(--navy);
-  font-size: 0.62rem; font-weight: 800;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 0.25rem 0.7rem; border-radius: 50px;
-}
-
-/* FAQ / NOTE */
-.note-section {
-  max-width: 700px; margin: 0 auto 5rem;
+/* ── FORM CONTAINER ── */
+.form-wrap {
+  max-width: 680px; margin: 3rem auto 5rem;
   padding: 0 2rem;
-  animation: fadeUp 0.6s 0.5s ease both;
+  animation: fadeUp 0.6s 0.35s ease both;
 }
-.note-section h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.3rem; font-weight: 800;
-  margin-bottom: 1rem; color: var(--navy);
+.form-card {
+  background: var(--white);
+  border: 1px solid rgba(44,26,14,0.08);
+  border-radius: 24px; padding: 2.5rem;
+  box-shadow: 0 8px 40px rgba(44,26,14,0.06);
 }
-.note-item {
-  background: white; border: 1px solid rgba(44,26,14,0.08);
-  border-radius: 14px; padding: 1.2rem 1.5rem;
-  margin-bottom: 0.8rem;
-  font-size: 0.88rem; color: var(--grey); line-height: 1.6;
-}
-.note-item strong { color: var(--navy); display: block; margin-bottom: 0.3rem; font-size: 0.92rem; }
 
-/* FOOTER */
-footer {
+/* Field groups */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+.field-group { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.2rem; }
+.field-group:last-child { margin-bottom: 0; }
+.field-label {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--navy);
+}
+.field-label span { color: var(--aqua); margin-left: 2px; }
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.95rem; color: var(--navy);
   background: var(--dark);
-  padding: 1.5rem 2rem;
-  text-align: center;
+  border: 1.5px solid rgba(44,26,14,0.12);
+  border-radius: 12px; padding: 0.85rem 1rem;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--aqua);
+  box-shadow: 0 0 0 3px rgba(212,114,10,0.1);
+}
+input::placeholder, textarea::placeholder { color: var(--grey); opacity: 0.6; }
+textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23D4720A'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+  padding-right: 40px; cursor: pointer;
+}
+
+/* Chip selectors */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  padding: 0.45rem 1rem; border-radius: 50px;
+  border: 1.5px solid rgba(44,26,14,0.12); background: var(--dark);
+  font-size: 0.8rem; font-weight: 600; color: var(--grey);
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.chip:hover { border-color: rgba(212,114,10,0.4); color: var(--navy); }
+.chip.selected { border-color: var(--aqua); background: rgba(212,114,10,0.08); color: var(--aqua); }
+
+/* Divider */
+.form-divider {
+  height: 1px; background: rgba(44,26,14,0.07);
+  margin: 1.8rem 0;
+}
+.form-section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem; font-weight: 700; color: var(--navy);
+  letter-spacing: -0.01em; margin-bottom: 1rem;
+}
+
+/* Submit */
+.form-submit {
+  margin-top: 2rem;
+  display: flex; flex-direction: column; align-items: stretch; gap: 0.8rem;
+}
+.btn-submit {
+  width: 100%; padding: 1rem; border-radius: 14px;
+  background: var(--navy); color: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem; font-weight: 700; letter-spacing: -0.01em;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(44,26,14,0.2); }
+.submit-note {
+  text-align: center; font-size: 0.75rem; color: var(--grey); line-height: 1.5;
+}
+
+/* ── SUCCESS STATE ── */
+.success-box {
+  display: none; text-align: center; padding: 3rem 2rem;
+}
+.success-box.visible { display: block; }
+.success-orb {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--aqua), var(--rose));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem; margin: 0 auto 1.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.success-box h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem; font-weight: 700; color: var(--navy);
+  margin-bottom: 0.8rem; letter-spacing: -0.02em;
+}
+.success-box p { font-size: 0.95rem; color: var(--grey); line-height: 1.6; }
+
+/* ── FAQ ── */
+.faq-section {
+  max-width: 680px; margin: 0 auto 5rem; padding: 0 2rem;
+}
+.faq-section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem; font-weight: 700; color: var(--navy);
+  letter-spacing: -0.02em; margin-bottom: 1.2rem;
+}
+.faq-item {
+  background: var(--white); border: 1px solid rgba(44,26,14,0.08);
+  border-radius: 14px; padding: 1.2rem 1.5rem; margin-bottom: 0.7rem;
+}
+.faq-item strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.88rem; font-weight: 700; color: var(--navy);
+  display: block; margin-bottom: 0.4rem;
+}
+.faq-item p { font-size: 0.85rem; color: var(--grey); line-height: 1.6; }
+
+footer {
+  background: var(--dark); padding: 1.5rem 2rem; text-align: center;
   font-size: 0.8rem; color: rgba(44,26,14,0.3);
   border-top: 1px solid rgba(44,26,14,0.08);
 }
 
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(24px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* MOBILE */
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   nav { padding: 1rem 1.2rem; }
-  .hero { padding: 7rem 1.2rem 2rem; }
-  .plans { grid-template-columns: 1fr; padding: 0 1.2rem; margin: 2rem auto; gap: 1rem; }
-  .plan-card { padding: 1.8rem; }
-  .plan-price .amount { font-size: 2.8rem; }
-  .note-section { padding: 0 1.2rem; }
-  h1 { font-size: clamp(1.9rem, 8vw, 2.8rem); }
+  .page-hero { padding: 6rem 1.2rem 2rem; }
+  .form-wrap { padding: 0 1rem; margin-bottom: 3rem; }
+  .form-card { padding: 1.5rem; }
+  .field-row { grid-template-columns: 1fr; }
+  .faq-section { padding: 0 1rem; }
+  .trust-strip { gap: 1rem; }
 }
 </style>
 </head>
@@ -266,112 +264,161 @@ footer {
 <div id="progress"></div>
 
 <nav>
-  <a href="index.html" class="nav-logo">WebApp su <span>Misura</span></a>
-  <a href="index.html" class="nav-back">← Torna alla demo</a>
+  <a href="index.html" class="nav-logo">
+    <span class="back-arrow">←</span> Olga<span style="color:var(--aqua)">.</span>dev
+  </a>
+  <span class="nav-badge">✉ Risposta in 48h</span>
 </nav>
 
-<div class="hero">
-  <div class="hero-badge">💰 Prezzi trasparenti — nessuna sorpresa</div>
-  <h1>Scegli il piano<br><em>giusto per te.</em></h1>
-  <p class="hero-sub">Abbiamo preparato due soluzioni pensate per strutture come la tua. Scegli quella più adatta e contattaci per partire insieme.</p>
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-badge">💬 Preventivo gratuito · senza impegno</div>
+  <h1>Raccontami<br>il tuo <em>progetto.</em></h1>
+  <p>Compila il form — ti rispondo entro 48 ore con una proposta su misura per la tua attività. Nessun impegno, nessun costo nascosto.</p>
+  <div class="trust-strip">
+    <div class="trust-item"><span>⚡</span> Risposta in 48h</div>
+    <div class="trust-item"><span>🎯</span> Proposta personalizzata</div>
+    <div class="trust-item"><span>🔒</span> Nessun impegno</div>
+  </div>
 </div>
 
-<div class="plans">
+<!-- FORM -->
+<div class="form-wrap">
+  <div class="form-card" id="form-card">
 
-  <!-- BASE -->
-  <div class="plan-card">
-    <div class="plan-tag base">Tutto incluso</div>
-    <div class="plan-name">WebApp Base</div>
-    <p class="plan-sub">Tutto quello che hai visto nella demo. Pronto in 48 ore, configurato sul layout della tua struttura.</p>
-    <div class="plan-price">
-      <span class="currency">€</span>
-      <span class="amount">350</span>
+    <form id="preventivo-form" novalidate>
+
+      <!-- Dati contatto -->
+      <div class="form-section-title">👤 I tuoi dati</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Nome <span>*</span></label>
+          <input type="text" id="nome" placeholder="Mario" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Cognome</label>
+          <input type="text" id="cognome" placeholder="Rossi">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Email <span>*</span></label>
+        <input type="email" id="email" placeholder="mario@esempio.it" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Attività / Azienda</label>
+        <input type="text" id="azienda" placeholder="Es. Ristorante Da Mario, Studio Rossi...">
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Tipo progetto -->
+      <div class="form-section-title">🛠 Che tipo di progetto hai in mente?</div>
+      <div class="field-group">
+        <div class="chips" id="tipo-chips">
+          <div class="chip" data-val="sito-vetrina">Sito Vetrina</div>
+          <div class="chip" data-val="webapp">WebApp</div>
+          <div class="chip" data-val="prenotazioni">Sistema Prenotazioni</div>
+          <div class="chip" data-val="questionario">Questionario / Form</div>
+          <div class="chip" data-val="agenda">Agenda / Gestionale</div>
+          <div class="chip" data-val="ecommerce">E-commerce</div>
+          <div class="chip" data-val="altro">Altro</div>
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Descrizione -->
+      <div class="form-section-title">📝 Descrivi il progetto</div>
+      <div class="field-group">
+        <label class="field-label">Cosa vorresti realizzare? <span>*</span></label>
+        <textarea id="descrizione" placeholder="Descrivi liberamente la tua idea, le funzionalità che ti servono, il settore in cui operi..." required></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Hai già un sito o un progetto esistente?</label>
+        <input type="text" id="sito" placeholder="Es. www.miosito.it (lascia vuoto se no)">
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Budget e tempistiche -->
+      <div class="form-section-title">📅 Tempistiche e budget</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Quando vorresti partire?</label>
+          <select id="tempistica">
+            <option value="">Seleziona...</option>
+            <option value="subito">Il prima possibile</option>
+            <option value="mese">Entro un mese</option>
+            <option value="trimestre">Nei prossimi 3 mesi</option>
+            <option value="flessibile">Sono flessibile</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Budget indicativo</label>
+          <select id="budget">
+            <option value="">Seleziona...</option>
+            <option value="sotto300">Sotto €300</option>
+            <option value="300-600">€300 – €600</option>
+            <option value="600-1200">€600 – €1.200</option>
+            <option value="oltre1200">Oltre €1.200</option>
+            <option value="nonso">Non so ancora</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-submit">
+        <button type="submit" class="btn-submit">
+          ✉ Invia richiesta di preventivo
+        </button>
+        <p class="submit-note">Ti rispondo entro 48 ore con una proposta personalizzata.<br>I tuoi dati non vengono condivisi con terze parti.</p>
+      </div>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success-box" id="success-box">
+      <div class="success-orb">✓</div>
+      <h2>Richiesta inviata!</h2>
+      <p>Grazie per avermi contattato.<br>Ti rispondo entro <strong>48 ore</strong> con una proposta personalizzata per il tuo progetto.</p>
+      <a href="index.html" style="display:inline-block;margin-top:1.5rem;color:var(--aqua);font-weight:700;text-decoration:none;font-size:0.9rem;">← Torna al portfolio</a>
     </div>
-    <p class="plan-price-label">una tantum · nessun canone mensile</p>
-    <div class="plan-divider"></div>
-    <div class="plan-features">
-      <div class="plan-feature"><span class="plan-feature-icon">🗺</span>Mappa interattiva fedele alla tua struttura</div>
-      <div class="plan-feature"><span class="plan-feature-icon">📅</span>Prenotazione lettini per data e fascia oraria</div>
-      <div class="plan-feature"><span class="plan-feature-icon">💳</span>Pagamento online integrato (Stripe / PayPal)</div>
-      <div class="plan-feature"><span class="plan-feature-icon">🗂</span>Area admin + export PDF prenotazioni</div>
-      <div class="plan-feature"><span class="plan-feature-icon">📊</span>Dashboard presenze e incassi in tempo reale</div>
-      <div class="plan-feature"><span class="plan-feature-icon">⛅</span>Meteo integrato nell'app</div>
-      <div class="plan-feature"><span class="plan-feature-icon">✅</span>Setup completo incluso · pronto in 48 ore</div>
-    </div>
-    <a href="tel:+393517645354" class="plan-cta dark">📞 Chiama ora — +39 351 7645354</a>
-    <p class="plan-note">Nessun canone mensile. Pagamento una volta sola.</p>
+
   </div>
-
-  <!-- PREMIUM -->
-  <div class="plan-card featured">
-    <div class="plan-includes">Su misura</div>
-    <div class="plan-tag premium">Funzioni extra</div>
-    <div class="plan-name">WebApp Premium</div>
-    <p class="plan-sub">Tutto del piano Base, più le funzionalità avanzate su misura per la tua attività.</p>
-    <div class="plan-price">
-      <span class="amount" style="font-size:2.2rem;color:var(--gold)">Su preventivo</span>
-    </div>
-    <p class="plan-price-label" style="color:rgba(253,246,238,0.5)">prezzo personalizzato in base alle funzioni scelte</p>
-    <div class="plan-divider"></div>
-    <div class="plan-features">
-      <div class="plan-feature"><span class="plan-feature-icon">📷</span>QR code fisici all'ingresso della struttura</div>
-      <div class="plan-feature"><span class="plan-feature-icon">🍹</span>Ordinazioni al posto — dal lettino al bar</div>
-      <div class="plan-feature"><span class="plan-feature-icon">🏅</span>Abbonamenti stagionali con posto riservato</div>
-      <div class="plan-feature"><span class="plan-feature-icon">🌍</span>App multilingua (IT · EN · DE · FR)</div>
-      <div class="plan-feature"><span class="plan-feature-icon">📲</span>Integrazione con il tuo sito web esistente</div>
-      <div class="plan-feature"><span class="plan-feature-icon">🔧</span>Modifiche e aggiornamenti continuativi</div>
-    </div>
-    <a href="https://wa.me/393517645354?text=Ciao%2C%20vorrei%20un%20preventivo%20per%20la%20WebApp%20Premium" target="_blank" class="plan-cta light">💬 Scrivici su WhatsApp</a>
-    <p class="plan-note" style="color:rgba(253,246,238,0.45)">Risposta entro poche ore · nessun impegno</p>
-  </div>
-
 </div>
 
-<!-- NOTE -->
-<div class="note-section">
+<!-- FAQ -->
+<div class="faq-section">
   <h2>Domande frequenti</h2>
-  <div class="note-item">
-    <strong>Devo avere un sito web già esistente?</strong>
-    No. La WebApp funziona da sola, con un link diretto o QR code. Non serve nessun sito.
+  <div class="faq-item">
+    <strong>Il preventivo è davvero gratuito?</strong>
+    <p>Sì, al 100%. Compili il form, io ti rispondo con una proposta — senza nessun impegno da parte tua.</p>
   </div>
-  <div class="note-item">
-    <strong>Quanto tempo ci vuole per partire?</strong>
-    48 ore dalla conferma. Configuriamo noi la mappa della tua struttura — tu non devi fare nulla.
+  <div class="faq-item">
+    <strong>Quanto tempo ci vuole per realizzare un progetto?</strong>
+    <p>Dipende dalla complessità. Un sito vetrina semplice può essere pronto in 5–7 giorni. Una WebApp con funzionalità avanzate richiede 2–4 settimane.</p>
   </div>
-  <div class="note-item">
-    <strong>I clienti devono scaricare un'app?</strong>
-    No. Si apre direttamente dal browser del telefono. Zero installazioni.
+  <div class="faq-item">
+    <strong>Devo avere già un sito web?</strong>
+    <p>No. Le WebApp e i siti che realizzo funzionano da soli, con un link diretto o QR code. Non è necessario avere nulla di preesistente.</p>
   </div>
-  <div class="note-item">
-    <strong>I pagamenti arrivano direttamente a me?</strong>
-    Sì. Attraverso Stripe o PayPal, l'incasso va direttamente sul tuo conto.
+  <div class="faq-item">
+    <strong>Posso richiedere modifiche dopo la consegna?</strong>
+    <p>Sì. Ogni progetto include un periodo di revisioni. Modifiche future possono essere concordate separatamente.</p>
   </div>
-  <div class="note-item">
-    <strong>Posso modificare i posti o i prezzi in futuro?</strong>
-    Sì, dalla dashboard admin puoi gestire tutto in autonomia. Per modifiche strutturali contattaci.
+  <div class="faq-item">
+    <strong>Lavori anche con clienti fuori dall'Italia?</strong>
+    <p>Assolutamente sì. Lavoro in remoto con clienti da tutta Europa. La comunicazione può avvenire in italiano o in inglese.</p>
   </div>
 </div>
 
 <footer>
-  © 2026 WebApp su Misura · Tutti i diritti riservati
+  © 2026 Olga P. · Web Designer &amp; Developer · Tutti i diritti riservati
 </footer>
 
 <script>
-// © 2026 Putignano Olga — Tutti i diritti riservati
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-  if (e.key === 'F12') e.preventDefault();
-  if (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) e.preventDefault();
-  if (e.ctrlKey && ['u','U','s','S'].includes(e.key)) e.preventDefault();
-  if (e.metaKey && ['u','U','s','S'].includes(e.key)) e.preventDefault();
-});
-document.addEventListener('copy', e => {
-  e.clipboardData.setData('text/plain','© 2026 Putignano Olga — WebApp su Misura. Tutti i diritti riservati.');
-  e.preventDefault();
-});
-
-// Cursor
-const cur = document.getElementById('cursor');
+// ── CURSOR ──
+const cur  = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 document.addEventListener('mousemove', e => {
   cur.style.left  = e.clientX - 6 + 'px';
@@ -379,21 +426,51 @@ document.addEventListener('mousemove', e => {
   ring.style.left = e.clientX - 18 + 'px';
   ring.style.top  = e.clientY - 18 + 'px';
 });
-document.querySelectorAll('a, button').forEach(el => {
+document.querySelectorAll('a, button, .chip, select, input, textarea').forEach(el => {
   el.addEventListener('mouseenter', () => { cur.style.transform='scale(2.5)'; ring.style.transform='scale(1.5)'; });
   el.addEventListener('mouseleave', () => { cur.style.transform='scale(1)'; ring.style.transform='scale(1)'; });
 });
 
-// Progress
+// ── SCROLL PROGRESS ──
 const prog = document.getElementById('progress');
 window.addEventListener('scroll', () => {
   prog.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
 });
 
-// Reveal
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.style.opacity='1'; });
-}, { threshold: 0.1 });
+// ── CHIPS ──
+const tipoChips = document.querySelectorAll('#tipo-chips .chip');
+tipoChips.forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('selected'));
+});
+
+// ── FORM SUBMIT ──
+document.getElementById('preventivo-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const desc = document.getElementById('descrizione').value.trim();
+
+  if (!nome || !email || !desc) {
+    [['nome', nome], ['email', email], ['descrizione', desc]].forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (!val) {
+        el.style.borderColor = 'var(--rose)';
+        el.addEventListener('input', () => el.style.borderColor = '', { once: true });
+      }
+    });
+    return;
+  }
+
+  // Raccoglie dati selezionati
+  const tipi = [...document.querySelectorAll('#tipo-chips .chip.selected')].map(c => c.dataset.val).join(', ');
+
+  // In un progetto reale qui si invierebbe a un backend/API
+  // Per ora mostriamo il messaggio di successo
+  this.style.display = 'none';
+  document.getElementById('success-box').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 </script>
 </body>
 </html>
