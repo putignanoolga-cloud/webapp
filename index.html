@@ -78,7 +78,7 @@ nav {
 
 /* ── HERO ── */
 #hero {
-  height: 200vh;
+  height: 150vh;
   position: relative;
 }
 .hero-sticky {
@@ -1106,28 +1106,28 @@ function onHeroScroll() {
   const heroH    = heroEl.offsetHeight - window.innerHeight;
   const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
 
-  // FASE 0 (0→0.15): lettere si ricompongono dal caos
-  setLetters(eio(clp(p, 0, 0.15)));
+  // FASE 0 (0→0.18): lettere si ricompongono dal caos
+  setLetters(eio(clp(p, 0, 0.18)));
 
-  // FASE 1 (0.15→0.50): zoom leggero (max 1.3x) poi dissolvenza
-  const p1 = eio(clp(p, 0.15, 0.50));
+  // FASE 1 (0.18→0.48): zoom leggero poi dissolvenza rapida
+  const p1 = eio(clp(p, 0.18, 0.48));
   const introScale   = 1 + p1 * 0.3;
-  const introOpacity = p1 < 0.70 ? 1 : 1 - eio(clp(p1, 0.70, 1));
+  const introOpacity = p1 < 0.60 ? 1 : 1 - eio(clp(p1, 0.60, 1));
   if (_lCanvas) {
     _lCanvas.style.transform = `scale(${introScale})`;
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // FASE 2 (0.52→0.75): titolo + sottotitolo
-  const p2 = eio(clp(p, 0.52, 0.75));
+  // FASE 2 (0.42→0.68): titolo + sottotitolo — parte mentre zoom sfuma
+  const p2 = eio(clp(p, 0.42, 0.68));
   const ty2 = (1 - p2) * 28;
   if (heroInnerEl) heroInnerEl.style.opacity = p2.toString();
   if (heroBadgeEl) { heroBadgeEl.style.opacity = p2.toString(); heroBadgeEl.style.transform = `translateY(${ty2}px)`; }
   if (heroH1El)    { heroH1El.style.opacity    = p2.toString(); heroH1El.style.transform    = `translateY(${ty2}px)`; }
   if (heroSubEl)   { heroSubEl.style.opacity   = p2.toString(); heroSubEl.style.transform   = `translateY(${ty2}px)`; }
 
-  // FASE 3 (0.74→0.95): bottoni + stats + card
-  const p3 = eio(clp(p, 0.74, 0.95));
+  // FASE 3 (0.62→0.88): bottoni + stats + card
+  const p3 = eio(clp(p, 0.62, 0.88));
   const ty3 = (1 - p3) * 22;
   if (heroActEl)  { heroActEl.style.opacity  = p3.toString(); heroActEl.style.transform  = `translateY(${ty3}px)`; }
   if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
