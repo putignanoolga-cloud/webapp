@@ -267,16 +267,69 @@ h2 {
 .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
-/* ── VORTEX canvas (dentro hero-sticky) ── */
-#vortexCanvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0;
+/* ── CODE EDITOR ── */
+#codeEditor {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 10; opacity: 0; pointer-events: none;
+  padding: 2rem;
 }
+.ce-window {
+  width: min(780px, 92vw);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.45);
+}
+.ce-bar {
+  background: #2d2d2d;
+  padding: 0.6rem 1rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  border-radius: 12px 12px 0 0;
+  width: min(780px, 92vw);
+}
+.ce-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.ce-title {
+  flex: 1; text-align: center;
+  font-size: 0.72rem; color: #888;
+  font-family: 'Space Grotesk', monospace; font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.ce-body {
+  background: #1a1a2e;
+  display: flex;
+  width: min(780px, 92vw);
+  min-height: 360px;
+  max-height: 58vh;
+  overflow: hidden;
+  border-radius: 0 0 12px 12px;
+}
+.ce-lines {
+  background: #151525;
+  padding: 1.2rem 0.7rem 1.2rem 0.5rem;
+  text-align: right;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.72rem; line-height: 1.7;
+  color: #444; user-select: none;
+  min-width: 2.8rem;
+}
+.ce-code {
+  flex: 1; margin: 0;
+  padding: 1.2rem 1.2rem 1.2rem 0.8rem;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.82rem; line-height: 1.7;
+  color: #cdd6f4; white-space: pre; overflow: hidden;
+  background: transparent;
+}
+.ce-cursor { color: #D4720A; animation: blink .7s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+/* Colori sintassi */
+.ck { color: #cba6f7; }  /* keyword / tag name */
+.ca { color: #89dceb; }  /* attribute */
+.cv { color: #a6e3a1; }  /* value stringa */
+.cc { color: #6c7086; }  /* commento */
+.ct { color: #cdd6f4; }  /* testo normale */
+.cp { color: #D4720A; }  /* punctuation / bracket */
 
 /* ── PORTFOLIO ── */
 #portfolio { background: var(--off); }
@@ -613,7 +666,18 @@ h2 { position: relative; display: inline-block; }
       </div>
     </div>
   </div>
-  <canvas id="vortexCanvas"></canvas>
+  <div id="codeEditor" aria-hidden="true">
+    <div class="ce-bar">
+      <span class="ce-dot" style="background:#ff5f57"></span>
+      <span class="ce-dot" style="background:#febc2e"></span>
+      <span class="ce-dot" style="background:#28c840"></span>
+      <span class="ce-title">index.html — Web.Misura</span>
+    </div>
+    <div class="ce-body">
+      <div class="ce-lines" id="ceLines"></div>
+      <pre class="ce-code" id="ceCode"><span id="ceTyped"></span><span class="ce-cursor">▌</span></pre>
+    </div>
+  </div>
  </div><!-- /hero-sticky -->
 </section>
 
@@ -1144,171 +1208,92 @@ function onHeroScroll() {
   if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
   if (heroVisEl)  { heroVisEl.style.opacity  = p3.toString(); heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
 
-  // FASE 4 (0.65→0.72): hero content sfuma, vortice inizia
-  const heroFadeOut = eio(clp(p, 0.65, 0.72));
+  // FASE 4 (0.64→0.72): hero content sfuma
+  const heroFadeOut = eio(clp(p, 0.64, 0.72));
   if (heroInnerEl) heroInnerEl.style.opacity = Math.max(0, p2 - heroFadeOut).toString();
 
-  // FASE 4: vortice (0.68 → 1.0)
-  const vp = clp(p, 0.68, 1.0);
-  const vCanvas = document.getElementById('vortexCanvas');
-  if (vCanvas) {
-    vCanvas.style.opacity = eio(clp(p, 0.68, 0.76)).toString();
-    if (window._drawVortex) window._drawVortex(eio(vp));
+  // FASE 4: code editor (0.70 → 1.0)
+  const edEl = document.getElementById('codeEditor');
+  if (edEl) {
+    edEl.style.opacity = eio(clp(p, 0.70, 0.78)).toString();
+    const tp = clp(p, 0.72, 1.0);
+    if (window._typeProgress) window._typeProgress(tp);
   }
 }
 
 window.addEventListener('scroll', onHeroScroll, { passive: true });
 requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
 
-// ── VORTEX (integrato nell'hero) ──
+// ── CODE TYPEWRITER ──
 (function() {
-  const canvas = document.getElementById('vortexCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+  const edEl    = document.getElementById('codeEditor');
+  const typed   = document.getElementById('ceTyped');
+  const linesEl = document.getElementById('ceLines');
+  if (!edEl || !typed) return;
 
-  const CHIPS = [
-    { text: 'index.html',      bg: '#D4720A', fg: '#FDF6EE' },
-    { text: 'style.css',       bg: '#2C6E9A', fg: '#FDF6EE' },
-    { text: 'app.js',          bg: '#F0C040', fg: '#2C1A0E' },
-    { text: 'main.js',         bg: '#F0C040', fg: '#2C1A0E' },
-    { text: 'router.js',       bg: '#7EC8A4', fg: '#2C1A0E' },
-    { text: 'package.json',    bg: '#C45A3A', fg: '#FDF6EE' },
-    { text: 'components.js',   bg: '#F0C040', fg: '#2C1A0E' },
-    { text: 'reset.css',       bg: '#2C6E9A', fg: '#FDF6EE' },
-    { text: 'utils.js',        bg: '#7EC8A4', fg: '#2C1A0E' },
-    { text: 'api.js',          bg: '#9A8070', fg: '#FDF6EE' },
-    { text: '<div>',           bg: '#E8A87C', fg: '#2C1A0E' },
-    { text: '<section>',       bg: '#E8A87C', fg: '#2C1A0E' },
-    { text: 'const fetch()',   bg: '#F0C040', fg: '#2C1A0E' },
-    { text: 'async/await',     bg: '#7EC8A4', fg: '#2C1A0E' },
-    { text: '@media',          bg: '#2C6E9A', fg: '#FDF6EE' },
-    { text: 'flex: 1',         bg: '#2C6E9A', fg: '#FDF6EE' },
-    { text: 'grid-template',   bg: '#2C6E9A', fg: '#FDF6EE' },
-    { text: 'transition: all', bg: '#9A8070', fg: '#FDF6EE' },
-    { text: 'addEventListener',bg: '#F0C040', fg: '#2C1A0E' },
-    { text: 'border-radius',   bg: '#C45A3A', fg: '#FDF6EE' },
-    { text: 'config.js',       bg: '#9A8070', fg: '#FDF6EE' },
-    { text: 'layout.css',      bg: '#2C6E9A', fg: '#FDF6EE' },
+  // Token: [type, text]  t=keyword/tag, a=attr, v=value, c=comment, p=punct, _=plain
+  const TOKENS = [
+    ['c','<!-- Il tuo sito web, costruito su misura →'],['_','\n'],
+    ['p','<!DOCTYPE html>'],['_','\n'],
+    ['p','<'],['t','html'],['_',' '],['a','lang'],['p','='],['v','"it"'],['p','>'],['_','\n'],
+    ['p','<'],['t','head'],['p','>'],['_','\n'],
+    ['_','  '],['p','<'],['t','meta'],['_',' '],['a','charset'],['p','='],['v','"UTF-8"'],['p','>'],['_','\n'],
+    ['_','  '],['p','<'],['t','title'],['p','>'],['_','Il tuo sito web'],['p','</'],['t','title'],['p','>'],['_','\n'],
+    ['_','  '],['p','<'],['t','link'],['_',' '],['a','rel'],['p','='],['v','"stylesheet"'],['_',' '],['a','href'],['p','='],['v','"style.css"'],['p','>'],['_','\n'],
+    ['p','</'],['t','head'],['p','>'],['_','\n'],
+    ['p','<'],['t','body'],['p','>'],['_','\n\n'],
+    ['_','  '],['p','<'],['t','nav'],['_',' '],['a','class'],['p','='],['v','"navbar"'],['p','>'],['_','\n'],
+    ['_','    '],['p','<'],['t','a'],['_',' '],['a','href'],['p','='],['v','"/"'],['_',' '],['a','class'],['p','='],['v','"logo"'],['p','>'],['_','Web.Misura'],['p','</'],['t','a'],['p','>'],['_','\n'],
+    ['_','  '],['p','</'],['t','nav'],['p','>'],['_','\n\n'],
+    ['_','  '],['p','<'],['t','section'],['_',' '],['a','class'],['p','='],['v','"hero"'],['p','>'],['_','\n'],
+    ['_','    '],['p','<'],['t','h1'],['p','>'],['_','Siti web che lavorano per te'],['p','</'],['t','h1'],['p','>'],['_','\n'],
+    ['_','    '],['p','<'],['t','p'],['p','>'],['_','Costruiti su misura, dal concept al lancio.'],['p','</'],['t','p'],['p','>'],['_','\n'],
+    ['_','    '],['p','<'],['t','a'],['_',' '],['a','href'],['p','='],['v','"preventivo.html"'],['_',' '],['a','class'],['p','='],['v','"btn"'],['p','>'],['_','Richiedi preventivo →'],['p','</'],['t','a'],['p','>'],['_','\n'],
+    ['_','  '],['p','</'],['t','section'],['p','>'],['_','\n\n'],
+    ['_','  '],['p','<'],['t','section'],['_',' '],['a','class'],['p','='],['v','"progetti"'],['p','>'],['_','\n'],
+    ['_','    '],['p','<'],['t','h2'],['p','>'],['_','I miei progetti'],['p','</'],['t','h2'],['p','>'],['_','\n'],
+    ['_','    '],['c','<!-- I tuoi progetti qui →'],['_','\n'],
+    ['_','  '],['p','</'],['t','section'],['p','>'],['_','\n\n'],
+    ['p','</'],['t','body'],['p','>'],['_','\n'],
+    ['p','</'],['t','html'],['p','>'],
   ];
 
-  const N = 180;
-  const vParticles = [];
+  // Costruisce array di caratteri con colore
+  const chars = [];
+  const colorMap = { t:'#f38ba8', a:'#89dceb', v:'#a6e3a1', c:'#585b70', p:'#D4720A', _:'#cdd6f4' };
+  TOKENS.forEach(([type, text]) => {
+    [...text].forEach(ch => chars.push({ ch, color: colorMap[type] || '#cdd6f4' }));
+  });
 
-  function initVortex() {
-    vParticles.length = 0;
-    const R = Math.min(window.innerWidth, window.innerHeight) * 0.46;
-    for (let i = 0; i < N; i++) {
-      const t    = i / N;
-      const chip = CHIPS[i % CHIPS.length];
-      vParticles.push({
-        chip,
-        baseAngle:  t * Math.PI * 16,
-        baseRadius: 55 + t * R,
-        fontSize:   10 + Math.random() * 5,
-        phase:      Math.random() * Math.PI * 2, // per oscillazione
-      });
-    }
-  }
-  initVortex();
+  // Pre-costruisce gli span
+  const spans = chars.map(({ ch, color }) => {
+    const s = document.createElement('span');
+    s.textContent = ch;
+    s.style.color = color;
+    s.style.opacity = '0';
+    return s;
+  });
+  spans.forEach(s => typed.appendChild(s));
 
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', () => { resize(); initVortex(); }, { passive: true });
-
-  function drawVortex(vp) {
-    const W = canvas.width, H = canvas.height;
-    const cx = W / 2, cy = H / 2;
-    ctx.clearRect(0, 0, W, H);
-
-    // Sfondo scuro progressivo
-    const bgAlpha = vp * 0.88;
-    ctx.fillStyle = `rgba(244,237,224,${bgAlpha})`;
-    ctx.fillRect(0, 0, W, H);
-
-    const spin   = vp * Math.PI * 10;
-    const inward = Math.pow(vp, 0.7);
-
-    // Corona / alone del buco nero
-    const holeR = vp * vp * Math.min(W, H) * 0.38;
-    if (holeR > 2) {
-      // Bagliore esterno (corona)
-      const corona = ctx.createRadialGradient(cx, cy, holeR * 0.5, cx, cy, holeR * 2.2);
-      corona.addColorStop(0,   'rgba(212,114,10,0.0)');
-      corona.addColorStop(0.3, `rgba(212,114,10,${0.18 * vp})`);
-      corona.addColorStop(0.6, `rgba(196,90,58,${0.10 * vp})`);
-      corona.addColorStop(1,   'rgba(196,90,58,0)');
-      ctx.fillStyle = corona;
-      ctx.beginPath();
-      ctx.arc(cx, cy, holeR * 2.2, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Il buco vero — nero pieno
-      const hole = ctx.createRadialGradient(cx, cy, 0, cx, cy, holeR);
-      hole.addColorStop(0,   'rgba(10,6,3,1)');
-      hole.addColorStop(0.75,'rgba(20,10,5,1)');
-      hole.addColorStop(1,   'rgba(44,26,14,0)');
-      ctx.fillStyle = hole;
-      ctx.beginPath();
-      ctx.arc(cx, cy, holeR * 1.1, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Chip / etichette in spirale
-    ctx.save();
-    // ordina per radius così i più lontani si disegnano prima
-    const sorted = [...vParticles].sort((a,b) => b.baseRadius - a.baseRadius);
-    sorted.forEach(p => {
-      const angle  = p.baseAngle + spin;
-      const radius = p.baseRadius * (1 - inward * 0.97);
-      if (radius < 4) return;
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
-
-      // distanza dal centro → fade
-      const dist = Math.hypot(x - cx, y - cy);
-      const fadeHole = Math.max(0, (dist - holeR * 1.1) / (holeR * 0.6 + 1));
-      const alpha = Math.min(1, fadeHole) * (1 - Math.pow(vp, 2.5) * 0.9);
-      if (alpha < 0.02) return;
-
-      const fs = p.fontSize;
-      ctx.font = `600 ${fs}px 'Space Grotesk', monospace`;
-      const tw = ctx.measureText(p.chip.text).width;
-      const pad = 5, rh = fs + pad * 2, rw = tw + pad * 2.5, rx = -rw / 2, ry = -rh / 2;
-      const br = 5;
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle + Math.PI / 2);
-      ctx.globalAlpha = alpha;
-
-      // Pill background
-      ctx.beginPath();
-      ctx.moveTo(rx + br, ry);
-      ctx.lineTo(rx + rw - br, ry);
-      ctx.quadraticCurveTo(rx + rw, ry, rx + rw, ry + br);
-      ctx.lineTo(rx + rw, ry + rh - br);
-      ctx.quadraticCurveTo(rx + rw, ry + rh, rx + rw - br, ry + rh);
-      ctx.lineTo(rx + br, ry + rh);
-      ctx.quadraticCurveTo(rx, ry + rh, rx, ry + rh - br);
-      ctx.lineTo(rx, ry + br);
-      ctx.quadraticCurveTo(rx, ry, rx + br, ry);
-      ctx.closePath();
-      ctx.fillStyle = p.chip.bg;
-      ctx.fill();
-
-      // Testo
-      ctx.fillStyle = p.chip.fg;
-      ctx.fillText(p.chip.text, rx + pad * 1.25, ry + pad + fs * 0.82);
-      ctx.restore();
-    });
-    ctx.restore();
+  // Aggiorna numeri di riga
+  function updateLines(visibleChars) {
+    const text = chars.slice(0, visibleChars).map(c => c.ch).join('');
+    const lines = text.split('\n').length;
+    let html = '';
+    for (let i = 1; i <= Math.max(lines, 1); i++) html += i + '\n';
+    linesEl.textContent = html;
   }
 
-  window._drawVortex = drawVortex;
-  drawVortex(0);
+  let lastN = -1;
+  window._typeProgress = function(tp) {
+    const n = Math.round(tp * chars.length);
+    if (n === lastN) return;
+    lastN = n;
+    spans.forEach((s, i) => { s.style.opacity = i < n ? '1' : '0'; });
+    updateLines(n);
+  };
+
+  updateLines(0);
 })();
 
 // ── REVEAL ON SCROLL ──
