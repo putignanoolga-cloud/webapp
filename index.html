@@ -984,6 +984,15 @@ function clp(t, a, b) { return Math.max(0, Math.min(1, (t-a)/(b-a))); }
 // ── LETTER SCATTER ──
 let _letters = [];
 let _lCanvas  = null;
+let _deco     = [];
+
+const DECO_TOKENS = [
+  '<div>', '</div>', '<h1>', '</h1>', '<a href="#">',
+  '{ }', '( )', '=>', '===', '&&', '||',
+  'const', 'let', 'return', 'async',
+  '.css', '.js', '.html',
+  '🎨', '⚡', '💡',
+];
 
 function initLetterScatter() {
   const wordEls = heroIntroEl.querySelectorAll('.hero-intro-word');
@@ -1046,6 +1055,27 @@ function initLetterScatter() {
       heroTagEl.style.alignItems = 'center';
     }
 
+    // Elementi decorativi che riempiono i buchi
+    const decoSizes = ['0.75rem','0.85rem','1rem','1.1rem','0.9rem'];
+    const decoColors = ['var(--aqua)','var(--rose)','var(--navy)','var(--grey)'];
+    for (let i = 0; i < 28; i++) {
+      const token = DECO_TOKENS[Math.floor(Math.random() * DECO_TOKENS.length)];
+      const el = document.createElement('div');
+      el.className = 'ltr deco';
+      el.textContent = token;
+      el.style.fontSize    = decoSizes[Math.floor(Math.random() * decoSizes.length)];
+      el.style.color       = decoColors[Math.floor(Math.random() * decoColors.length)];
+      const baseOp = 0.12 + Math.random() * 0.22;
+      el.dataset.baseOp    = baseOp.toString();
+      el.style.opacity     = baseOp.toString();
+      el.style.fontFamily  = "'Space Grotesk', monospace";
+      el.style.fontWeight  = '500';
+      el.style.left        = (pad + Math.random() * (W - pad * 2)) + 'px';
+      el.style.top         = (pad + Math.random() * (H - pad * 2)) + 'px';
+      _lCanvas.appendChild(el);
+      _deco.push(el);
+    }
+
     setLetters(0);
   });
 }
@@ -1055,6 +1085,9 @@ function setLetters(progress) {
     el.style.transform = `translate(${dx*(1-progress)}px, ${dy*(1-progress)}px)`;
     if (!isSpace) el.style.opacity = (0.08 + progress * 0.92).toString();
   });
+  // Gli elementi decorativi scompaiono man mano che le lettere si ricompongono
+  const decoOp = Math.max(0, 1 - progress * 2.5);
+  _deco.forEach(el => { el.style.opacity = (parseFloat(el.dataset.baseOp || 0.2) * decoOp).toString(); });
 }
 
 // Prepara i data-text sulle parole prima di spezzarle
