@@ -1035,7 +1035,7 @@ function initLetterScatter() {
     });
 
     // Zoom dal centro esatto del blocco testo
-    const textCenterY = window.innerHeight / 2;
+    const textCenterY = isFinite(minY) ? (minY + maxY) / 2 : window.innerHeight / 2;
     _lCanvas.style.transformOrigin = `50% ${textCenterY}px`;
 
     if (heroTagEl) {
@@ -1060,7 +1060,7 @@ function setLetters(progress) {
 heroIntroEl.querySelectorAll('.hero-intro-word').forEach(w => {
   w.dataset.text = w.textContent;
 });
-initLetterScatter();
+document.fonts.ready.then(() => { initLetterScatter(); });
 
 // ── HERO SCROLL ──
 function onHeroScroll() {
