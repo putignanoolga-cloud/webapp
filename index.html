@@ -1423,11 +1423,10 @@ function applyHero(p) {
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // WATERMARK: breve flash (0.22→0.32)
-  const wmIn      = eio(clp(p, 0.22, 0.28));
-  const wmOut     = eio(clp(p, 0.28, 0.34));
-  const heroAlpha = eio(clp(p, 0.26, 0.40));
-  const wmOp      = Math.max(0, wmIn - wmOut - heroAlpha);
+  // WATERMARK: compare subito dopo il canvas (0.21) e sparisce prima del hero content
+  const wmIn  = eio(clp(p, 0.21, 0.24));   // compare veloce
+  const wmOut = eio(clp(p, 0.30, 0.38));   // sparisce prima che hero sia visibile
+  const wmOp  = Math.max(0, wmIn - wmOut);
   if (_wmEl) {
     _wmEl.style.opacity   = wmOp.toString();
     const wmShift = wmOut * 12;
