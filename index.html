@@ -473,6 +473,98 @@ footer {
 @media (max-width: 600px) {
   .services-grid { grid-template-columns:1fr; }
 }
+
+/* ── FLOATING ORBS ── */
+.hero-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(90px); pointer-events: none; z-index: 0;
+  animation: floatOrb var(--dur, 9s) ease-in-out infinite alternate;
+}
+@keyframes floatOrb {
+  from { transform: translate(0,0) scale(1) rotate(0deg); }
+  to   { transform: translate(var(--tx,30px), var(--ty,-40px)) scale(1.12) rotate(5deg); }
+}
+
+/* ── HERO BADGE GLOW ── */
+@keyframes badgeGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(196,98,26,0); border-color: rgba(196,98,26,0.3); }
+  50%     { box-shadow: 0 0 24px 6px rgba(196,98,26,0.25); border-color: rgba(196,98,26,0.7); }
+}
+.hero-badge { animation: fadeUp 0.8s ease both, badgeGlow 3s 1.5s ease-in-out infinite !important; }
+
+/* ── AVATAR PULSE GLOW ── */
+@keyframes avatarPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(212,114,10,0); }
+  50%     { box-shadow: 0 0 40px 12px rgba(212,114,10,0.3); }
+}
+.avatar-initials { animation: avatarPulse 4s 2s ease-in-out infinite; }
+
+/* ── SHIMMER ON SERVICE CELLS ── */
+.service-cell::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transition: left 0.6s ease; z-index: 0;
+}
+.service-cell:hover::before { left: 150%; }
+
+/* ── 3D TILT CARDS ── */
+.project-card, .testi-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(.23,1,.32,1), box-shadow 0.4s, border-color 0.3s !important;
+}
+.project-card .project-body, .project-card .project-footer,
+.project-card .project-thumb { transform: translateZ(20px); }
+
+/* ── MAGNETIC BUTTON RIPPLE ── */
+.btn-primary, .btn-secondary, .nav-cta {
+  position: relative; overflow: hidden;
+  transition: transform 0.35s cubic-bezier(.23,1,.32,1), box-shadow 0.3s !important;
+}
+.btn-ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,0.3); pointer-events: none;
+  transform: scale(0); animation: rippleOut 0.6s ease-out forwards;
+}
+@keyframes rippleOut { to { transform: scale(4); opacity: 0; } }
+
+/* ── SCROLL REVEAL VARIANTS ── */
+.reveal-scale { opacity:0; transform:scale(0.88); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal-scale.visible { opacity:1; transform:scale(1); }
+.reveal-left { opacity:0; transform:translateX(-40px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left.visible { opacity:1; transform:translateX(0); }
+
+/* ── STAT CARD GLOW ON COUNT ── */
+.stat-card { transition: box-shadow 0.4s; }
+.stat-card.counted { box-shadow: 0 0 24px rgba(212,114,10,0.18); }
+
+/* ── HERO DECORATIVE FLOATING SHAPES ── */
+.hero-shape {
+  position: absolute; pointer-events: none; z-index: 0;
+  animation: shapeFloat var(--sf-dur, 6s) ease-in-out infinite alternate;
+  opacity: 0.5;
+}
+@keyframes shapeFloat {
+  from { transform: translateY(0) rotate(0deg); }
+  to   { transform: translateY(var(--sf-y, -20px)) rotate(var(--sf-r, 10deg)); }
+}
+
+/* ── SECTION HEADING UNDERLINE DRAW ── */
+h2 { position: relative; display: inline-block; }
+.section-inner > h2::after {
+  content: ''; display: block;
+  height: 3px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--aqua), var(--rose));
+  margin-top: 0.3rem;
+  width: 0; transition: width 1s cubic-bezier(.23,1,.32,1) 0.3s;
+}
+.section-inner > h2.visible::after { width: 60px; }
+
+/* ── CURSOR TRAIL ── */
+.cursor-dot {
+  position: fixed; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--aqua); pointer-events: none; z-index: 9997;
+  opacity: 0; transition: opacity 0.3s;
+}
 </style>
 </head>
 <body>
@@ -497,6 +589,17 @@ footer {
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
+
+  <!-- Orbs fluttuanti -->
+  <div class="hero-orb" style="--dur:11s;--tx:40px;--ty:-50px;width:500px;height:500px;background:radial-gradient(circle,rgba(196,98,26,0.12),transparent 70%);top:-15%;right:0%;"></div>
+  <div class="hero-orb" style="--dur:14s;--tx:-30px;--ty:35px;width:350px;height:350px;background:radial-gradient(circle,rgba(212,114,10,0.09),transparent 70%);bottom:5%;left:5%;"></div>
+  <div class="hero-orb" style="--dur:8s;--tx:20px;--ty:-25px;width:250px;height:250px;background:radial-gradient(circle,rgba(196,90,58,0.08),transparent 70%);top:25%;right:38%;"></div>
+
+  <!-- Shape decorative -->
+  <div class="hero-shape" style="--sf-dur:7s;--sf-y:-18px;--sf-r:12deg;top:20%;left:4%;width:50px;height:50px;border:2px solid rgba(196,98,26,0.15);border-radius:12px;"></div>
+  <div class="hero-shape" style="--sf-dur:9s;--sf-y:-24px;--sf-r:-8deg;bottom:25%;right:8%;width:30px;height:30px;border-radius:50%;background:rgba(212,114,10,0.12);"></div>
+  <div class="hero-shape" style="--sf-dur:5s;--sf-y:-12px;--sf-r:20deg;top:60%;left:45%;width:16px;height:16px;background:rgba(196,98,26,0.2);border-radius:3px;"></div>
+
   <div class="hero-inner">
     <div class="hero-content">
       <div class="hero-badge">✦ Disponibile per nuovi progetti — 2026</div>
@@ -966,10 +1069,6 @@ document.querySelectorAll('a,button,.project-card,.service-cell,.testi-card').fo
 
 // ── SCROLL PROGRESS ──
 const prog = document.getElementById('progress');
-window.addEventListener('scroll', () => {
-  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
-  prog.style.width = pct + '%';
-});
 
 // ── REVEAL ON SCROLL ──
 const obs = new IntersectionObserver(entries => {
@@ -985,6 +1084,144 @@ const stepObs = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.5 });
 document.querySelectorAll('.step').forEach(s => stepObs.observe(s));
+
+// ── 3D CARD TILT ──
+document.querySelectorAll('.project-card, .testi-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width  - 0.5) * 18;
+    const y = ((e.clientY - r.top)  / r.height - 0.5) * -18;
+    const shine = `radial-gradient(circle at ${((e.clientX-r.left)/r.width*100).toFixed(0)}% ${((e.clientY-r.top)/r.height*100).toFixed(0)}%, rgba(255,255,255,0.08) 0%, transparent 60%)`;
+    card.style.transform = `perspective(800px) rotateY(${x}deg) rotateX(${y}deg) translateY(-8px) scale(1.02)`;
+    card.style.boxShadow = `${-x*1.2}px ${y*1.2}px 48px rgba(44,26,14,0.18)`;
+    card.style.background = shine + `, var(--white)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) translateY(0) scale(1)';
+    card.style.boxShadow = '';
+    card.style.background = '';
+    card.style.transition = 'transform 0.6s cubic-bezier(.23,1,.32,1), box-shadow 0.6s, border-color 0.3s, background 0.4s';
+    setTimeout(() => { card.style.transform = ''; card.style.transition = ''; }, 600);
+  });
+});
+
+// ── AVATAR CARD 3D TILT ──
+const avatarCard = document.querySelector('.avatar-card');
+if (avatarCard) {
+  avatarCard.addEventListener('mousemove', e => {
+    const r = avatarCard.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width  - 0.5) * 12;
+    const y = ((e.clientY - r.top)  / r.height - 0.5) * -12;
+    avatarCard.style.transform = `perspective(700px) rotateY(${x}deg) rotateX(${y}deg)`;
+  });
+  avatarCard.addEventListener('mouseleave', () => {
+    avatarCard.style.transition = 'transform 0.6s cubic-bezier(.23,1,.32,1)';
+    avatarCard.style.transform = 'perspective(700px) rotateY(0) rotateX(0)';
+    setTimeout(() => { avatarCard.style.transform = ''; avatarCard.style.transition = ''; }, 600);
+  });
+}
+
+// ── MAGNETIC BUTTONS ──
+document.querySelectorAll('.btn-primary,.btn-secondary,.nav-cta').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width/2)  * 0.28;
+    const y = (e.clientY - r.top  - r.height/2) * 0.28;
+    btn.style.transform = `translate(${x}px, ${y}px) scale(1.04)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transition = 'transform 0.5s cubic-bezier(.23,1,.32,1)';
+    btn.style.transform = 'translate(0,0) scale(1)';
+    setTimeout(() => { btn.style.transform = ''; btn.style.transition = ''; }, 500);
+  });
+  btn.addEventListener('click', e => {
+    const r = btn.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'btn-ripple';
+    const size = Math.max(r.width, r.height) * 2;
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 700);
+  });
+});
+
+// ── NUMBER COUNTER ──
+function countUp(el, target, suffix, dur) {
+  const start = Date.now();
+  const run = () => {
+    const p = Math.min((Date.now() - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(ease * target) + suffix;
+    if (p < 1) requestAnimationFrame(run);
+  };
+  requestAnimationFrame(run);
+}
+const cntObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const n = e.target.querySelector('.stat-num');
+    if (!n || n.dataset.done) return;
+    n.dataset.done = '1';
+    e.target.classList.add('counted');
+    const t = n.textContent.trim();
+    if (t.includes('48'))  countUp(n, 48,  'h', 1400);
+    if (t.includes('100')) countUp(n, 100, '%', 1600);
+    if (t.includes('5'))   countUp(n, 5,   '★', 900);
+  });
+}, { threshold: 0.7 });
+document.querySelectorAll('.stat-card').forEach(c => cntObs.observe(c));
+
+// ── SCROLL-BASED HERO BG PARALLAX ──
+const heroBgEl = document.querySelector('.hero-bg');
+const heroOrbs = document.querySelectorAll('.hero-orb');
+const heroShapes = document.querySelectorAll('.hero-shape');
+
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  const pct = sy / (document.body.scrollHeight - window.innerHeight) * 100;
+  prog.style.width = pct + '%';
+
+  if (heroBgEl) heroBgEl.style.transform = `translateY(${sy * 0.3}px)`;
+  heroOrbs.forEach((orb, i) => {
+    const speed = 0.15 + i * 0.08;
+    orb.style.transform = `translateY(${sy * speed}px)`;
+  });
+  heroShapes.forEach((shape, i) => {
+    const speed = 0.1 + i * 0.05;
+    shape.style.transform = `translateY(${sy * speed}px) rotate(${sy * 0.02}deg)`;
+  });
+}, { passive: true });
+
+// ── CURSOR TRAIL ──
+const trailCount = 8;
+const trails = Array.from({length: trailCount}, (_, i) => {
+  const d = document.createElement('div');
+  d.className = 'cursor-dot';
+  d.style.opacity = (1 - i / trailCount) * 0.5;
+  d.style.width = d.style.height = (6 - i * 0.4) + 'px';
+  d.style.zIndex = 9990 - i;
+  document.body.appendChild(d);
+  return d;
+});
+let trailPositions = Array.from({length: trailCount}, () => ({x: -100, y: -100}));
+let trailTarget = {x: -100, y: -100};
+
+document.addEventListener('mousemove', e => { trailTarget.x = e.clientX; trailTarget.y = e.clientY; });
+
+(function animTrail() {
+  trailPositions[0].x = lerp(trailPositions[0].x, trailTarget.x, 0.35);
+  trailPositions[0].y = lerp(trailPositions[0].y, trailTarget.y, 0.35);
+  for (let i = 1; i < trailCount; i++) {
+    trailPositions[i].x = lerp(trailPositions[i].x, trailPositions[i-1].x, 0.55);
+    trailPositions[i].y = lerp(trailPositions[i].y, trailPositions[i-1].y, 0.55);
+  }
+  trails.forEach((d, i) => {
+    d.style.left = trailPositions[i].x - 3 + 'px';
+    d.style.top  = trailPositions[i].y - 3 + 'px';
+    d.style.opacity = (1 - i / trailCount) * 0.45;
+  });
+  requestAnimationFrame(animTrail);
+})();
 </script>
 </body>
 </html>
