@@ -78,7 +78,7 @@ nav {
 
 /* ── HERO ── */
 #hero {
-  height: 180vh;
+  height: 300vh;
   position: relative;
 }
 .hero-sticky {
@@ -267,22 +267,13 @@ h2 {
 .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
-/* ── CODE EDITOR SECTION ── */
-#codeSection {
-  height: 220vh;
-  position: relative;
-  background: var(--off);
-}
-.code-sticky {
-  position: sticky; top: 0;
-  height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
+/* ── CODE EDITOR ── */
 #codeEditor {
+  position: absolute; inset: 0;
   display: flex; flex-direction: row;
   align-items: center; justify-content: center;
-  width: 100%; padding: 1rem 2rem;
+  z-index: 10; opacity: 0; pointer-events: none;
+  padding: 1rem 1.5rem;
   gap: 1.2rem;
 }
 .ce-main { display: flex; flex-direction: column; flex-shrink: 0; }
@@ -379,14 +370,7 @@ h2 {
 .cp { color: #D4720A; }  /* punctuation / bracket */
 
 /* ── PORTFOLIO ── */
-#portfolio { background: var(--off); position: relative; }
-#portfolio::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 120px;
-  background: linear-gradient(to bottom, var(--white), transparent);
-  pointer-events: none; z-index: 1;
-}
+#portfolio { background: var(--off); }
 .portfolio-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem; margin-top: 3rem;
@@ -720,29 +704,27 @@ h2 { position: relative; display: inline-block; }
       </div>
     </div>
   </div>
- </div><!-- /hero-sticky -->
-</section>
+  <div id="codeEditor" aria-hidden="true">
+    <!-- Progetti lato sinistro -->
+    <div class="ce-sidebar ce-sidebar--left" id="ceSideLeft"></div>
 
-<!-- CODE EDITOR SECTION -->
-<section id="codeSection">
-  <div class="code-sticky">
-    <div id="codeEditor">
-      <div class="ce-sidebar ce-sidebar--left" id="ceSideLeft"></div>
-      <div class="ce-main">
-        <div class="ce-bar">
-          <span class="ce-dot" style="background:#ff5f57"></span>
-          <span class="ce-dot" style="background:#febc2e"></span>
-          <span class="ce-dot" style="background:#28c840"></span>
-          <span class="ce-title">index.html — Web.Misura</span>
-        </div>
-        <div class="ce-body">
-          <div class="ce-lines" id="ceLines"></div>
-          <pre class="ce-code" id="ceCode"><span id="ceTyped"></span><span class="ce-cursor">▌</span></pre>
-        </div>
+    <div class="ce-main">
+      <div class="ce-bar">
+        <span class="ce-dot" style="background:#ff5f57"></span>
+        <span class="ce-dot" style="background:#febc2e"></span>
+        <span class="ce-dot" style="background:#28c840"></span>
+        <span class="ce-title">index.html — Web.Misura</span>
       </div>
-      <div class="ce-sidebar ce-sidebar--right" id="ceSideRight"></div>
+      <div class="ce-body">
+        <div class="ce-lines" id="ceLines"></div>
+        <pre class="ce-code" id="ceCode"><span id="ceTyped"></span><span class="ce-cursor">▌</span></pre>
+      </div>
     </div>
+
+    <!-- Progetti lato destro -->
+    <div class="ce-sidebar ce-sidebar--right" id="ceSideRight"></div>
   </div>
+ </div><!-- /hero-sticky -->
 </section>
 
 <!-- PORTFOLIO -->
@@ -1246,32 +1228,43 @@ function onHeroScroll() {
   const heroH    = heroEl.offsetHeight - window.innerHeight;
   const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
 
-  // FASE 0 (0→0.15): lettere si ricompongono
-  setLetters(eio(clp(p, 0, 0.15)));
+  // FASE 0 (0→0.10): lettere si ricompongono
+  setLetters(eio(clp(p, 0, 0.10)));
 
-  // FASE 1 (0.15→0.40): zoom + dissolvenza
-  const p1 = eio(clp(p, 0.15, 0.40));
-  const introOpacity = p1 < 0.65 ? 1 : 1 - eio(clp(p1, 0.65, 1));
+  // FASE 1 (0.10→0.30): zoom + dissolvenza
+  const p1 = eio(clp(p, 0.10, 0.30));
+  const introOpacity = p1 < 0.60 ? 1 : 1 - eio(clp(p1, 0.60, 1));
   if (_lCanvas) {
     _lCanvas.style.transform = `scale(${1 + p1 * 0.3})`;
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // FASE 2 (0.38→0.62): hero content appare
-  const p2 = eio(clp(p, 0.38, 0.62));
+  // FASE 2 (0.28→0.48): hero content appare
+  const p2 = eio(clp(p, 0.28, 0.48));
   const ty2 = (1 - p2) * 28;
   if (heroInnerEl) heroInnerEl.style.opacity = p2.toString();
   if (heroBadgeEl) { heroBadgeEl.style.opacity = p2.toString(); heroBadgeEl.style.transform = `translateY(${ty2}px)`; }
   if (heroH1El)    { heroH1El.style.opacity    = p2.toString(); heroH1El.style.transform    = `translateY(${ty2}px)`; }
   if (heroSubEl)   { heroSubEl.style.opacity   = p2.toString(); heroSubEl.style.transform   = `translateY(${ty2}px)`; }
 
-  // FASE 3 (0.58→0.80): bottoni + stats + card
-  const p3 = eio(clp(p, 0.58, 0.80));
+  // FASE 3 (0.44→0.60): bottoni + stats + card
+  const p3 = eio(clp(p, 0.44, 0.60));
   const ty3 = (1 - p3) * 22;
   if (heroActEl)  { heroActEl.style.opacity  = p3.toString(); heroActEl.style.transform  = `translateY(${ty3}px)`; }
   if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
   if (heroVisEl)  { heroVisEl.style.opacity  = p3.toString(); heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
 
+  // FASE 4 (0.64→0.72): hero content sfuma
+  const heroFadeOut = eio(clp(p, 0.64, 0.72));
+  if (heroInnerEl) heroInnerEl.style.opacity = Math.max(0, p2 - heroFadeOut).toString();
+
+  // FASE 4: code editor (0.70 → 1.0)
+  const edEl = document.getElementById('codeEditor');
+  if (edEl) {
+    edEl.style.opacity = eio(clp(p, 0.70, 0.78)).toString();
+    const tp = clp(p, 0.72, 1.0);
+    if (window._typeProgress) window._typeProgress(tp);
+  }
 }
 
 window.addEventListener('scroll', onHeroScroll, { passive: true });
@@ -1409,19 +1402,6 @@ requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
   };
 
   updateLines(0);
-
-  // Scroll handler per la sezione code editor
-  const codeSec = document.getElementById('codeSection');
-  function onCodeScroll() {
-    if (!codeSec) return;
-    const scrolled = window.scrollY;
-    const top = codeSec.offsetTop;
-    const h   = codeSec.offsetHeight - window.innerHeight;
-    const tp  = Math.max(0, Math.min(1, (scrolled - top) / h));
-    window._typeProgress(tp);
-  }
-  window.addEventListener('scroll', onCodeScroll, { passive: true });
-  onCodeScroll();
 })();
 
 // ── REVEAL ON SCROLL ──
