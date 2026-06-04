@@ -78,8 +78,14 @@ nav {
 
 /* ── HERO ── */
 #hero {
-  min-height: 100vh; display: flex; align-items: center;
-  padding: 5rem 2rem 3rem; position: relative; overflow: hidden;
+  height: 300vh;
+  position: relative;
+}
+.hero-sticky {
+  position: sticky; top: 0;
+  height: 100vh; overflow: hidden;
+  display: flex; align-items: center;
+  padding: 0 2rem;
 }
 .hero-bg {
   position: absolute; inset: 0;
@@ -95,20 +101,39 @@ nav {
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
 }
+
+/* Intro fullscreen */
+.hero-intro {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none;
+  transform-origin: center center;
+  z-index: 3;
+}
+.hero-intro-word {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(4.5rem, 13vw, 10rem);
+  font-weight: 800; letter-spacing: -0.04em;
+  line-height: 0.92; color: var(--navy);
+  text-align: center;
+}
+.hero-intro-word.accent { color: var(--aqua); }
+
 .hero-inner {
   max-width: 1100px; margin: 0 auto; width: 100%;
   display: grid; grid-template-columns: 1fr 1fr;
-  align-items: center; gap: 3rem; position: relative; z-index: 1;
+  align-items: center; gap: 3rem;
+  position: relative; z-index: 2;
+  opacity: 0;
 }
-.hero-content { will-change: transform; transition: transform 0.1s linear; }
-.hero-visual  { will-change: transform; transition: transform 0.1s linear; }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(196,98,26,0.1); border: 1px solid rgba(196,98,26,0.3);
   color: var(--aqua); padding: 0.4rem 1rem; border-radius: 50px;
   font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
   text-transform: uppercase; margin-bottom: 1.5rem;
-  animation: fadeUp 0.8s ease both;
+  opacity: 0;
 }
 .hero-badge::before { content: "●"; font-size: 0.5rem; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
@@ -118,17 +143,17 @@ h1 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(2.4rem, 3vw, 4rem); font-weight: 800;
   line-height: 1.05; letter-spacing: -0.04em; color: var(--navy);
-  animation: fadeUp 0.8s 0.15s ease both;
+  opacity: 0;
 }
 h1 em { color: var(--aqua); font-style: normal; }
 .hero-sub {
   font-size: 1.15rem; font-weight: 300; color: rgba(44,26,14,0.55);
-  line-height: 1.6; margin: 1.5rem 0 2.5rem;
-  animation: fadeUp 0.8s 0.3s ease both; max-width: 520px;
+  line-height: 1.6; margin: 1.5rem 0 2.5rem; max-width: 520px;
+  opacity: 0;
 }
 .hero-actions {
   display: flex; gap: 1rem; flex-wrap: wrap;
-  animation: fadeUp 0.8s 0.45s ease both;
+  opacity: 0;
 }
 .btn-primary {
   background: var(--navy); color: var(--white);
@@ -151,7 +176,7 @@ h1 em { color: var(--aqua); font-style: normal; }
 /* Hero stats */
 .hero-stats {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
-  margin-top: 2.5rem; animation: fadeUp 0.8s 0.6s ease both;
+  margin-top: 2.5rem; opacity: 0;
 }
 .stat-card {
   background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
@@ -166,8 +191,8 @@ h1 em { color: var(--aqua); font-style: normal; }
 /* Hero avatar / visual */
 .hero-visual {
   position: relative; width: 100%;
-  animation: fadeUp 0.8s 0.2s ease both;
   display: flex; align-items: center; justify-content: center;
+  opacity: 0;
 }
 .avatar-card {
   background: var(--white); border-radius: 28px;
@@ -423,7 +448,7 @@ footer {
   .nav-links { display:none; }
   .nav-cta { padding:0.45rem 1rem; font-size:0.8rem; }
 
-  #hero { padding:5rem 1.2rem 2rem; min-height:unset; }
+  .hero-sticky { padding:0 1.2rem; }
   .hero-inner { grid-template-columns:1fr; gap:2rem; }
   .hero-visual { display:none; }
   h1 { font-size:clamp(2.2rem,10vw,3.5rem); line-height:1; }
@@ -493,8 +518,16 @@ h2 { position: relative; display: inline-block; }
 
 <!-- HERO -->
 <section id="hero">
+ <div class="hero-sticky">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
+
+  <!-- FASE 1: testo schermo intero -->
+  <div class="hero-intro" id="heroIntro">
+    <div class="hero-intro-word">WEBSITE</div>
+    <div class="hero-intro-word accent">SU MISURA</div>
+  </div>
+
   <div class="hero-inner">
     <div class="hero-content">
       <div class="hero-badge">✦ Disponibile per nuovi progetti — 2026</div>
@@ -543,6 +576,7 @@ h2 { position: relative; display: inline-block; }
       </div>
     </div>
   </div>
+ </div><!-- /hero-sticky -->
 </section>
 
 <!-- PORTFOLIO -->
@@ -897,73 +931,56 @@ h2 { position: relative; display: inline-block; }
 </footer>
 
 <script>
-// ── CURSOR ──
-const cur = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-
-// ── HERO PARALLAX ──
-const heroSection = document.getElementById('hero');
-const heroContent = document.querySelector('.hero-content');
-const heroVisual  = document.querySelector('.hero-visual');
-const heroBadge   = document.querySelector('.hero-badge');
-const heroGrid    = document.querySelector('.hero-grid');
-
-let heroActive = false;
-let tContent = {x:0,y:0}, tVisual = {x:0,y:0}, tBadge = {x:0,y:0}, tGrid = {x:0,y:0};
-let cContent = {x:0,y:0}, cVisual = {x:0,y:0}, cBadge = {x:0,y:0}, cGrid = {x:0,y:0};
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-
-function animateParallax() {
-  if (!heroActive) return;
-  cContent.x = lerp(cContent.x, tContent.x, 0.06);
-  cContent.y = lerp(cContent.y, tContent.y, 0.06);
-  cVisual.x  = lerp(cVisual.x,  tVisual.x,  0.04);
-  cVisual.y  = lerp(cVisual.y,  tVisual.y,  0.04);
-  cBadge.x   = lerp(cBadge.x,   tBadge.x,   0.08);
-  cBadge.y   = lerp(cBadge.y,   tBadge.y,   0.08);
-  cGrid.x    = lerp(cGrid.x,    tGrid.x,    0.03);
-  cGrid.y    = lerp(cGrid.y,    tGrid.y,    0.03);
-  if (heroContent) heroContent.style.transform = `translate(${cContent.x}px, ${cContent.y}px)`;
-  if (heroVisual)  heroVisual.style.transform  = `translate(${cVisual.x}px,  ${cVisual.y}px)`;
-  if (heroBadge)   heroBadge.style.transform   = `translate(${cBadge.x}px,   ${cBadge.y}px)`;
-  if (heroGrid)    heroGrid.style.transform     = `translate(${cGrid.x}px,    ${cGrid.y}px)`;
-  requestAnimationFrame(animateParallax);
-}
-
-document.addEventListener('mousemove', e => {
-  cur.style.left  = e.clientX - 6 + 'px';
-  cur.style.top   = e.clientY - 6 + 'px';
-  ring.style.left = e.clientX - 18 + 'px';
-  ring.style.top  = e.clientY - 18 + 'px';
-
-  // Parallax solo se il mouse è nella sezione hero
-  if (heroSection) {
-    const rect = heroSection.getBoundingClientRect();
-    if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
-      const cx = (e.clientX / window.innerWidth  - 0.5);
-      const cy = (e.clientY / window.innerHeight - 0.5);
-      tContent.x = cx * -12;  tContent.y = cy * -8;
-      tVisual.x  = cx *  20;  tVisual.y  = cy *  14;
-      tBadge.x   = cx * -6;   tBadge.y   = cy * -4;
-      tGrid.x    = cx *  8;   tGrid.y    = cy *  6;
-      if (!heroActive) { heroActive = true; animateParallax(); }
-    } else {
-      // Reset graduale quando esci dall'hero
-      tContent.x = tContent.y = 0;
-      tVisual.x  = tVisual.y  = 0;
-      tBadge.x   = tBadge.y   = 0;
-      tGrid.x    = tGrid.y    = 0;
-    }
-  }
-});
-document.querySelectorAll('a,button,.project-card,.service-cell,.testi-card').forEach(el => {
-  el.addEventListener('mouseenter', () => { cur.style.transform='scale(2.5)'; ring.style.transform='scale(1.5)'; });
-  el.addEventListener('mouseleave', () => { cur.style.transform='scale(1)';   ring.style.transform='scale(1)';   });
-});
-
 // ── SCROLL PROGRESS ──
 const prog = document.getElementById('progress');
+
+// ── HERO CINEMATIC SCROLL ──
+const heroEl      = document.getElementById('hero');
+const heroIntroEl = document.getElementById('heroIntro');
+const heroInnerEl = document.querySelector('.hero-inner');
+const heroBadgeEl = document.querySelector('.hero-badge');
+const heroH1El    = document.querySelector('#hero h1');
+const heroSubEl   = document.querySelector('.hero-sub');
+const heroActEl   = document.querySelector('.hero-actions');
+const heroStatEl  = document.querySelector('.hero-stats');
+const heroVisEl   = document.querySelector('.hero-visual');
+
+function eio(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t; } // ease-in-out
+function clp(t, a, b) { return Math.max(0, Math.min(1, (t-a)/(b-a))); } // clamp to range
+
+function onHeroScroll() {
+  const scrolled = window.scrollY;
+  const heroTop  = heroEl.offsetTop;
+  const heroH    = heroEl.offsetHeight - window.innerHeight;
+  const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
+
+  // FASE 1 (0→0.42): intro testo schermo intero, poi zoom dentro e svanisce
+  const p1 = eio(clp(p, 0, 0.42));
+  const introScale = 1 + p1 * 9;
+  const introOpacity = p1 < 0.6 ? 1 : 1 - eio(clp(p1, 0.6, 1));
+  if (heroIntroEl) {
+    heroIntroEl.style.transform = `scale(${introScale})`;
+    heroIntroEl.style.opacity   = Math.max(0, introOpacity);
+  }
+
+  // FASE 2 (0.32→0.65): appare hero-inner con titolo e sottotitolo
+  const p2 = eio(clp(p, 0.32, 0.65));
+  if (heroInnerEl) heroInnerEl.style.opacity = p2;
+  const translateY2 = (1 - p2) * 28;
+  if (heroBadgeEl) { heroBadgeEl.style.opacity = p2; heroBadgeEl.style.transform = `translateY(${translateY2}px)`; }
+  if (heroH1El)    { heroH1El.style.opacity    = p2; heroH1El.style.transform    = `translateY(${translateY2}px)`; }
+  if (heroSubEl)   { heroSubEl.style.opacity   = p2; heroSubEl.style.transform   = `translateY(${translateY2}px)`; }
+
+  // FASE 3 (0.62→0.9): bottoni, statistiche e card visuale
+  const p3 = eio(clp(p, 0.62, 0.9));
+  const translateY3 = (1 - p3) * 22;
+  if (heroActEl)  { heroActEl.style.opacity  = p3; heroActEl.style.transform  = `translateY(${translateY3}px)`; }
+  if (heroStatEl) { heroStatEl.style.opacity = p3; heroStatEl.style.transform = `translateY(${translateY3}px)`; }
+  if (heroVisEl)  { heroVisEl.style.opacity  = p3; heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
+}
+
+window.addEventListener('scroll', onHeroScroll, { passive: true });
+onHeroScroll(); // stato iniziale
 
 // ── REVEAL ON SCROLL ──
 const obs = new IntersectionObserver(entries => {
@@ -980,7 +997,6 @@ const stepObs = new IntersectionObserver(entries => {
 }, { threshold: 0.5 });
 document.querySelectorAll('.step').forEach(s => stepObs.observe(s));
 
-// ── SCROLL PROGRESS ──
 window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
   prog.style.width = pct + '%';
