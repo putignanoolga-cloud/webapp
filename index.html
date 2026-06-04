@@ -78,7 +78,7 @@ nav {
 
 /* ── HERO ── */
 #hero {
-  height: 150vh;
+  height: 300vh;
   position: relative;
 }
 .hero-sticky {
@@ -267,26 +267,15 @@ h2 {
 .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
-/* ── VORTEX ── */
-#vortex-section {
-  height: 200vh;
-  position: relative;
-  background: var(--off);
-}
-.vortex-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
+/* ── VORTEX canvas (dentro hero-sticky) ── */
 #vortexCanvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
 }
 
 /* ── PORTFOLIO ── */
@@ -624,14 +613,8 @@ h2 { position: relative; display: inline-block; }
       </div>
     </div>
   </div>
+  <canvas id="vortexCanvas"></canvas>
  </div><!-- /hero-sticky -->
-</section>
-
-<!-- VORTEX TRANSITION -->
-<section id="vortex-section">
-  <div class="vortex-sticky">
-    <canvas id="vortexCanvas"></canvas>
-  </div>
 </section>
 
 <!-- PORTFOLIO -->
@@ -1135,120 +1118,133 @@ function onHeroScroll() {
   const heroH    = heroEl.offsetHeight - window.innerHeight;
   const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
 
-  // FASE 0 (0→0.18): lettere si ricompongono dal caos
-  setLetters(eio(clp(p, 0, 0.18)));
+  // FASE 0 (0→0.10): lettere si ricompongono
+  setLetters(eio(clp(p, 0, 0.10)));
 
-  // FASE 1 (0.18→0.48): zoom leggero poi dissolvenza rapida
-  const p1 = eio(clp(p, 0.18, 0.48));
-  const introScale   = 1 + p1 * 0.3;
+  // FASE 1 (0.10→0.30): zoom + dissolvenza
+  const p1 = eio(clp(p, 0.10, 0.30));
   const introOpacity = p1 < 0.60 ? 1 : 1 - eio(clp(p1, 0.60, 1));
   if (_lCanvas) {
-    _lCanvas.style.transform = `scale(${introScale})`;
+    _lCanvas.style.transform = `scale(${1 + p1 * 0.3})`;
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // FASE 2 (0.42→0.68): titolo + sottotitolo — parte mentre zoom sfuma
-  const p2 = eio(clp(p, 0.42, 0.68));
+  // FASE 2 (0.28→0.48): hero content appare
+  const p2 = eio(clp(p, 0.28, 0.48));
   const ty2 = (1 - p2) * 28;
   if (heroInnerEl) heroInnerEl.style.opacity = p2.toString();
   if (heroBadgeEl) { heroBadgeEl.style.opacity = p2.toString(); heroBadgeEl.style.transform = `translateY(${ty2}px)`; }
   if (heroH1El)    { heroH1El.style.opacity    = p2.toString(); heroH1El.style.transform    = `translateY(${ty2}px)`; }
   if (heroSubEl)   { heroSubEl.style.opacity   = p2.toString(); heroSubEl.style.transform   = `translateY(${ty2}px)`; }
 
-  // FASE 3 (0.62→0.88): bottoni + stats + card
-  const p3 = eio(clp(p, 0.62, 0.88));
+  // FASE 3 (0.44→0.60): bottoni + stats + card
+  const p3 = eio(clp(p, 0.44, 0.60));
   const ty3 = (1 - p3) * 22;
   if (heroActEl)  { heroActEl.style.opacity  = p3.toString(); heroActEl.style.transform  = `translateY(${ty3}px)`; }
   if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
   if (heroVisEl)  { heroVisEl.style.opacity  = p3.toString(); heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
+
+  // FASE 4 (0.65→0.72): hero content sfuma, vortice inizia
+  const heroFadeOut = eio(clp(p, 0.65, 0.72));
+  if (heroInnerEl) heroInnerEl.style.opacity = Math.max(0, p2 - heroFadeOut).toString();
+
+  // FASE 4: vortice (0.68 → 1.0)
+  const vp = clp(p, 0.68, 1.0);
+  const vCanvas = document.getElementById('vortexCanvas');
+  if (vCanvas) {
+    vCanvas.style.opacity = eio(clp(p, 0.68, 0.76)).toString();
+    if (window._drawVortex) window._drawVortex(eio(vp));
+  }
 }
 
 window.addEventListener('scroll', onHeroScroll, { passive: true });
 requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
 
-// ── VORTEX ──
+// ── VORTEX (integrato nell'hero) ──
 (function() {
-  const sec    = document.getElementById('vortex-section');
   const canvas = document.getElementById('vortexCanvas');
-  if (!sec || !canvas) return;
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const N = 280; // numero di particelle
-  const particles = [];
+  const FILE_TOKENS = [
+    'index.html','style.css','app.js','main.js','script.js',
+    'layout.css','reset.css','components.js','router.js',
+    'index.css','utils.js','api.js','config.js','package.json',
+    '<div>','<section>','<header>','<footer>','<nav>',
+    '.container {}','@media','const fetch','async/await',
+    'flex:1','grid-template','border-radius','transition:',
+    'querySelector','addEventListener','useState','return </>',
+  ];
+
+  const N = 220;
+  const vParticles = [];
+
+  function initVortex() {
+    const R = Math.min(window.innerWidth, window.innerHeight) * 0.44;
+    for (let i = 0; i < N; i++) {
+      const t = i / N;
+      vParticles.push({
+        token:      FILE_TOKENS[i % FILE_TOKENS.length],
+        baseAngle:  t * Math.PI * 14,
+        baseRadius: 40 + t * R,
+        fontSize:   9 + Math.random() * 6,
+        color:      ['#D4720A','#C45A3A','#2C1A0E','#9A8070'][Math.floor(Math.random()*4)],
+      });
+    }
+  }
+  initVortex();
 
   function resize() {
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   resize();
-  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('resize', () => { resize(); vParticles.length=0; initVortex(); }, { passive: true });
 
-  // Genera particelle in una spirale iniziale
-  for (let i = 0; i < N; i++) {
-    const angle  = (i / N) * Math.PI * 12; // 6 giri
-    const radius = 80 + (i / N) * Math.min(window.innerWidth, window.innerHeight) * 0.42;
-    particles.push({
-      baseAngle:  angle,
-      baseRadius: radius,
-      size: 1.5 + Math.random() * 2.5,
-      hue: Math.random() < 0.5 ? 30 : 15, // aqua/rose tones
-      sat: 60 + Math.random() * 30,
-      lit: 35 + Math.random() * 30,
-    });
-  }
-
-  function drawVortex(progress) {
+  function drawVortex(vp) {
     const W = canvas.width, H = canvas.height;
     const cx = W / 2, cy = H / 2;
+    ctx.clearRect(0, 0, W, H);
 
-    // Sfondo: da off-white a navy in base al progresso
-    const bg = `hsl(30, 28%, ${97 - progress * 62}%)`;
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
+    const spin   = vp * Math.PI * 8;
+    const inward = Math.min(1, vp * 1.1);
 
-    // Buco nero crescente al centro
-    const holeR = progress * progress * Math.min(W, H) * 0.52;
-    if (holeR > 2) {
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, holeR);
-      grad.addColorStop(0,   `hsla(20, 30%, 8%, 1)`);
-      grad.addColorStop(0.6, `hsla(20, 30%, 8%, 0.9)`);
-      grad.addColorStop(1,   `hsla(20, 30%, 8%, 0)`);
-      ctx.fillStyle = grad;
+    // Buco nero
+    const holeR = vp * vp * Math.min(W, H) * 0.55;
+    if (holeR > 1) {
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, holeR * 1.4);
+      g.addColorStop(0,   'rgba(44,26,14,1)');
+      g.addColorStop(0.5, 'rgba(44,26,14,0.85)');
+      g.addColorStop(1,   'rgba(44,26,14,0)');
+      ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(cx, cy, holeR * 1.3, 0, Math.PI * 2);
+      ctx.arc(cx, cy, holeR * 1.4, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Particelle
-    const spin   = progress * Math.PI * 6;   // giri aggiuntivi
-    const inward = progress;                  // fattore di rientro verso centro
-
-    particles.forEach(p => {
+    // Testi in spirale
+    ctx.save();
+    vParticles.forEach(p => {
       const angle  = p.baseAngle + spin;
-      const radius = p.baseRadius * (1 - inward * 0.95);
+      const radius = p.baseRadius * (1 - inward * 0.96);
       const x = cx + Math.cos(angle) * radius;
       const y = cy + Math.sin(angle) * radius;
-      const alpha = Math.max(0, 1 - inward * 1.2);
-      const size  = p.size * (1 + inward * 2);
-
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${p.hue}, ${p.sat}%, ${p.lit}%, ${alpha})`;
-      ctx.fill();
+      const alpha = Math.max(0, 0.7 - inward * 0.75);
+      if (alpha <= 0) return;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle + Math.PI / 2);
+      ctx.font = `500 ${p.fontSize}px 'Space Grotesk', monospace`;
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = alpha;
+      ctx.fillText(p.token, 0, 0);
+      ctx.restore();
     });
+    ctx.restore();
   }
 
-  let raf = null;
-  function onVortexScroll() {
-    const scrolled = window.scrollY;
-    const top  = sec.offsetTop;
-    const h    = sec.offsetHeight - window.innerHeight;
-    const p    = Math.max(0, Math.min(1, (scrolled - top) / h));
-    if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => drawVortex(p));
-  }
-
-  window.addEventListener('scroll', onVortexScroll, { passive: true });
+  // Esposto globalmente per essere chiamato da onHeroScroll
+  window._drawVortex = drawVortex;
   drawVortex(0);
 })();
 
