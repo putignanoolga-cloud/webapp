@@ -370,7 +370,14 @@ h2 {
 .cp { color: #D4720A; }  /* punctuation / bracket */
 
 /* ── PORTFOLIO ── */
-#portfolio { background: var(--off); }
+#portfolio { background: var(--off); position: relative; }
+#portfolio::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, var(--white), transparent);
+  pointer-events: none; z-index: 1;
+}
 .portfolio-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem; margin-top: 3rem;
@@ -1258,11 +1265,13 @@ function onHeroScroll() {
   const heroFadeOut = eio(clp(p, 0.64, 0.72));
   if (heroInnerEl) heroInnerEl.style.opacity = Math.max(0, p2 - heroFadeOut).toString();
 
-  // FASE 4: code editor (0.70 → 1.0)
+  // FASE 4: code editor — fade in (0.70→0.78), typewrite (0.72→0.92), fade out (0.92→1.0)
   const edEl = document.getElementById('codeEditor');
   if (edEl) {
-    edEl.style.opacity = eio(clp(p, 0.70, 0.78)).toString();
-    const tp = clp(p, 0.72, 1.0);
+    const edIn  = eio(clp(p, 0.70, 0.78));
+    const edOut = eio(clp(p, 0.92, 1.00));
+    edEl.style.opacity = Math.max(0, edIn - edOut).toString();
+    const tp = clp(p, 0.72, 0.93);
     if (window._typeProgress) window._typeProgress(tp);
   }
 }
