@@ -267,13 +267,22 @@ h2 {
 .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
-/* ── CODE EDITOR ── */
+/* ── CODE EDITOR SECTION ── */
+#codeSection {
+  height: 220vh;
+  position: relative;
+  background: var(--off);
+}
+.code-sticky {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
 #codeEditor {
-  position: absolute; inset: 0;
   display: flex; flex-direction: row;
   align-items: center; justify-content: center;
-  z-index: 10; opacity: 0; pointer-events: none;
-  padding: 1rem 1.5rem;
+  width: 100%; padding: 1rem 2rem;
   gap: 1.2rem;
 }
 .ce-main { display: flex; flex-direction: column; flex-shrink: 0; }
@@ -712,6 +721,28 @@ h2 { position: relative; display: inline-block; }
     </div>
   </div>
  </div><!-- /hero-sticky -->
+</section>
+
+<!-- CODE EDITOR SECTION -->
+<section id="codeSection">
+  <div class="code-sticky">
+    <div id="codeEditor">
+      <div class="ce-sidebar ce-sidebar--left" id="ceSideLeft"></div>
+      <div class="ce-main">
+        <div class="ce-bar">
+          <span class="ce-dot" style="background:#ff5f57"></span>
+          <span class="ce-dot" style="background:#febc2e"></span>
+          <span class="ce-dot" style="background:#28c840"></span>
+          <span class="ce-title">index.html — Web.Misura</span>
+        </div>
+        <div class="ce-body">
+          <div class="ce-lines" id="ceLines"></div>
+          <pre class="ce-code" id="ceCode"><span id="ceTyped"></span><span class="ce-cursor">▌</span></pre>
+        </div>
+      </div>
+      <div class="ce-sidebar ce-sidebar--right" id="ceSideRight"></div>
+    </div>
+  </div>
 </section>
 
 <!-- PORTFOLIO -->
@@ -1378,6 +1409,19 @@ requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
   };
 
   updateLines(0);
+
+  // Scroll handler per la sezione code editor
+  const codeSec = document.getElementById('codeSection');
+  function onCodeScroll() {
+    if (!codeSec) return;
+    const scrolled = window.scrollY;
+    const top = codeSec.offsetTop;
+    const h   = codeSec.offsetHeight - window.innerHeight;
+    const tp  = Math.max(0, Math.min(1, (scrolled - top) / h));
+    window._typeProgress(tp);
+  }
+  window.addEventListener('scroll', onCodeScroll, { passive: true });
+  onCodeScroll();
 })();
 
 // ── REVEAL ON SCROLL ──
