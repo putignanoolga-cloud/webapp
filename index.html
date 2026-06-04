@@ -122,7 +122,7 @@ nav {
 .hero-tagline {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  pointer-events: none; z-index: 4;
+  pointer-events: none; z-index: 5;
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(1.4rem, 3.5vw, 2.4rem);
   font-weight: 600; letter-spacing: -0.02em;
@@ -971,31 +971,31 @@ function onHeroScroll() {
   const heroH    = heroEl.offsetHeight - window.innerHeight;
   const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
 
-  // FASE 1 (0→0.38): intro testo schermo intero, poi zoom dentro e svanisce
-  const p1 = eio(clp(p, 0, 0.38));
+  // FASE 1 (0→0.50): intro testo schermo intero, poi zoom dentro e svanisce
+  const p1 = eio(clp(p, 0, 0.50));
   const introScale = 1 + p1 * 9;
-  const introOpacity = p1 < 0.55 ? 1 : 1 - eio(clp(p1, 0.55, 1));
+  const introOpacity = p1 < 0.60 ? 1 : 1 - eio(clp(p1, 0.60, 1));
   if (heroIntroEl) {
     heroIntroEl.style.transform = `scale(${introScale})`;
     heroIntroEl.style.opacity   = Math.max(0, introOpacity);
   }
 
-  // FASE 1.5 (0.32→0.62): scritta simpatica appare al centro e poi svanisce
-  const tagIn  = eio(clp(p, 0.32, 0.46));
-  const tagOut = eio(clp(p, 0.50, 0.62));
+  // FASE 1.5: scritta appare MENTRE le lettere sono enormi (p 0.28→0.55), poi svanisce (0.55→0.68)
+  const tagIn  = eio(clp(p, 0.28, 0.42));
+  const tagOut = eio(clp(p, 0.55, 0.68));
   const tagOpacity = Math.max(0, tagIn - tagOut);
   if (heroTagEl) heroTagEl.style.opacity = tagOpacity;
 
-  // FASE 2 (0.55→0.80): appare hero-inner con titolo e sottotitolo
-  const p2 = eio(clp(p, 0.55, 0.80));
+  // FASE 2 (0.62→0.84): appare hero-inner con titolo e sottotitolo
+  const p2 = eio(clp(p, 0.62, 0.84));
   if (heroInnerEl) heroInnerEl.style.opacity = p2;
   const translateY2 = (1 - p2) * 28;
   if (heroBadgeEl) { heroBadgeEl.style.opacity = p2; heroBadgeEl.style.transform = `translateY(${translateY2}px)`; }
   if (heroH1El)    { heroH1El.style.opacity    = p2; heroH1El.style.transform    = `translateY(${translateY2}px)`; }
   if (heroSubEl)   { heroSubEl.style.opacity   = p2; heroSubEl.style.transform   = `translateY(${translateY2}px)`; }
 
-  // FASE 3 (0.75→0.96): bottoni, statistiche e card visuale
-  const p3 = eio(clp(p, 0.75, 0.96));
+  // FASE 3 (0.82→0.98): bottoni, statistiche e card visuale
+  const p3 = eio(clp(p, 0.82, 0.98));
   const translateY3 = (1 - p3) * 22;
   if (heroActEl)  { heroActEl.style.opacity  = p3; heroActEl.style.transform  = `translateY(${translateY3}px)`; }
   if (heroStatEl) { heroStatEl.style.opacity = p3; heroStatEl.style.transform = `translateY(${translateY3}px)`; }
