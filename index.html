@@ -1423,9 +1423,9 @@ function applyHero(p) {
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // WATERMARK: compare mentre intro svanisce, poi si dissolve al comparire del contenuto
-  const wmIn  = eio(clp(p, 0.24, 0.35));
-  const wmOut = eio(clp(p, 0.48, 0.60));
+  // WATERMARK: compare solo dopo che il canvas è completamente svanito (p=0.40)
+  const wmIn  = eio(clp(p, 0.40, 0.48));
+  const wmOut = eio(clp(p, 0.52, 0.62));
   const wmOp  = Math.max(0, wmIn - wmOut);
   if (_wmEl) {
     _wmEl.style.opacity   = wmOp.toString();
