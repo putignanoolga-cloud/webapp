@@ -263,7 +263,7 @@ h2 {
   font-weight:800; line-height:1.05; letter-spacing:-0.03em; color:var(--navy);
 }
 .section-sub { font-size:1rem; color:var(--grey); margin-top:0.8rem; line-height:1.6; max-width:560px; }
-.reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
 /* ── CODE EDITOR ── */
@@ -286,8 +286,8 @@ h2 {
   border-radius: 14px;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(18px) scale(0.97);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateY(22px) scale(0.96);
+  transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
   box-shadow: 0 8px 28px rgba(0,0,0,0.28);
 }
 .ce-proj.show { opacity: 1; transform: translateY(0) scale(1); }
@@ -377,7 +377,7 @@ h2 {
 .project-card {
   background: var(--white); border: 1px solid rgba(44,26,14,0.08);
   border-radius: 20px; overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1), box-shadow 0.45s cubic-bezier(0.22,1,0.36,1), border-color 0.3s;
   display: flex; flex-direction: column;
   cursor: pointer;
 }
@@ -1178,7 +1178,8 @@ const heroStatEl   = document.querySelector('.hero-stats');
 const heroVisEl    = document.querySelector('.hero-visual');
 const heroStickyEl = document.querySelector('.hero-sticky');
 
-function eio(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+// Easing cubico — più morbido di quello quadratico
+function eio(t) { return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
 function clp(t, a, b) { return Math.max(0, Math.min(1, (t-a)/(b-a))); }
 
 // ── LETTER SCATTER ──
@@ -1302,13 +1303,10 @@ heroIntroEl.querySelectorAll('.hero-intro-word').forEach(w => {
 });
 document.fonts.ready.then(() => { initLetterScatter(); });
 
-// ── HERO SCROLL ──
-function onHeroScroll() {
-  const scrolled = window.scrollY;
-  const heroTop  = heroEl.offsetTop;
-  const heroH    = heroEl.offsetHeight - window.innerHeight;
-  const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
+// ── HERO SCROLL con lerp ──
+let _targetP = 0, _currentP = 0, _rafId = null;
 
+function applyHero(p) {
   // FASE 0 (0→0.10): lettere si ricompongono
   setLetters(eio(clp(p, 0, 0.10)));
 
@@ -1348,8 +1346,22 @@ function onHeroScroll() {
   }
 }
 
-window.addEventListener('scroll', onHeroScroll, { passive: true });
-requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
+function heroLoop() {
+  const heroTop = heroEl.offsetTop;
+  const heroH   = heroEl.offsetHeight - window.innerHeight;
+  _targetP = Math.max(0, Math.min(1, (window.scrollY - heroTop) / heroH));
+
+  // Lerp: insegue lo scroll con fluidità (0.10 = lento/morbido, 0.18 = reattivo)
+  const speed = 0.13;
+  _currentP += (_targetP - _currentP) * speed;
+  if (Math.abs(_targetP - _currentP) < 0.0002) _currentP = _targetP;
+
+  applyHero(_currentP);
+  _rafId = requestAnimationFrame(heroLoop);
+}
+
+window.addEventListener('scroll', () => {}, { passive: true });
+requestAnimationFrame(heroLoop);
 
 // ── CODE TYPEWRITER ──
 (function() {
