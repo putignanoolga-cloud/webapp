@@ -1060,10 +1060,10 @@ function onHeroScroll() {
   // FASE 0 (0→0.12): lettere si ricompongono dal caos
   setLetters(eio(clp(p, 0, 0.12)));
 
-  // FASE 1 (0.12→0.55): canvas lettere fa zoom in (max 2x per restare leggibile)
-  const p1 = eio(clp(p, 0.12, 0.55));
-  const introScale   = 1 + p1 * 1.1;
-  const introOpacity = p1 < 0.55 ? 1 : 1 - eio(clp(p1, 0.55, 1));
+  // FASE 1 (0.12→0.58): zoom leggero (max 1.3x) — tutta la scritta rimane visibile
+  const p1 = eio(clp(p, 0.12, 0.58));
+  const introScale   = 1 + p1 * 0.3;
+  const introOpacity = p1 < 0.72 ? 1 : 1 - eio(clp(p1, 0.72, 1));
   if (_lCanvas) {
     _lCanvas.style.transform = `scale(${introScale})`;
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
