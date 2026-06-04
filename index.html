@@ -148,6 +148,53 @@ nav {
   opacity: 0;
 }
 
+/* ── HERO WATERMARK ── */
+.hero-watermark {
+  position: absolute; inset: 0; z-index: 4;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0;
+  transform-origin: center center;
+}
+.hw-line {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; letter-spacing: -0.04em; line-height: 0.9;
+  color: var(--navy); opacity: 0.07;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  white-space: nowrap;
+}
+.hw-line.accent { color: var(--aqua); opacity: 0.1; }
+
+/* ── HERO CIRCLE CTA ── */
+.hero-circle-cta {
+  position: absolute; right: 7%; top: 50%;
+  transform: translateY(-50%) scale(0);
+  width: clamp(110px, 10vw, 150px); height: clamp(110px, 10vw, 150px);
+  border-radius: 50%;
+  background: var(--navy); color: var(--white);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.3rem;
+  text-decoration: none; z-index: 6; opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 20px 60px rgba(44,26,14,0.3);
+  transition: box-shadow 0.3s;
+}
+.hero-circle-cta:hover { box-shadow: 0 28px 70px rgba(44,26,14,0.4); }
+.hcc-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(0.6rem, 0.9vw, 0.78rem);
+  font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; text-align: center; line-height: 1.3;
+}
+.hcc-arrow {
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem); font-weight: 300; line-height: 1;
+}
+@media (max-width: 899px) {
+  .hero-circle-cta { right: 4%; width: 90px; height: 90px; }
+  .hcc-label { font-size: 0.58rem; }
+  .hcc-arrow { font-size: 1rem; }
+}
+
 .hero-inner {
   max-width: 1100px; margin: 0 auto; width: 100%;
   display: grid; grid-template-columns: 1fr 1fr;
@@ -772,6 +819,16 @@ h2 { position: relative; display: inline-block; }
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
 
+  <!-- WATERMARK + CIRCLE CTA -->
+  <div class="hero-watermark" id="heroWatermark">
+    <div class="hw-line">WEB.</div>
+    <div class="hw-line accent">SU MISURA</div>
+  </div>
+  <a href="preventivo.html" class="hero-circle-cta" id="heroCircleCta">
+    <span class="hcc-label">Richiedi<br>Preventivo</span>
+    <span class="hcc-arrow">→</span>
+  </a>
+
   <!-- FASE 1: testo schermo intero -->
   <div class="hero-intro" id="heroIntro">
     <div class="hero-intro-block">
@@ -1351,42 +1408,64 @@ document.fonts.ready.then(() => { initLetterScatter(); });
 // ── HERO SCROLL con lerp ──
 let _targetP = 0, _currentP = 0, _rafId = null;
 
+const _wmEl     = document.getElementById('heroWatermark');
+const _circleEl = document.getElementById('heroCircleCta');
+
 function applyHero(p) {
   // FASE 0 (0→0.10): lettere si ricompongono
   setLetters(eio(clp(p, 0, 0.10)));
 
-  // FASE 1 (0.10→0.30): zoom + dissolvenza
-  const p1 = eio(clp(p, 0.10, 0.30));
-  const introOpacity = p1 < 0.60 ? 1 : 1 - eio(clp(p1, 0.60, 1));
+  // FASE 1 (0.10→0.40): zoom più lungo + dissolvenza
+  const p1 = eio(clp(p, 0.10, 0.40));
+  const introOpacity = p1 < 0.55 ? 1 : 1 - eio(clp(p1, 0.55, 1.0));
   if (_lCanvas) {
-    _lCanvas.style.transform = `scale(${1 + p1 * 0.3})`;
+    _lCanvas.style.transform = `scale(${1 + p1 * 0.45})`;
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // FASE 2 (0.28→0.48): hero content appare
-  const p2 = eio(clp(p, 0.28, 0.48));
+  // WATERMARK: compare mentre intro svanisce, poi si dissolve al comparire del contenuto
+  const wmIn  = eio(clp(p, 0.24, 0.35));
+  const wmOut = eio(clp(p, 0.48, 0.60));
+  const wmOp  = Math.max(0, wmIn - wmOut);
+  if (_wmEl) {
+    _wmEl.style.opacity   = wmOp.toString();
+    const wmShift = wmOut * 12;
+    const wmScale = 1 - wmOut * 0.1;
+    _wmEl.style.transform = `translateX(${wmShift}%) scale(${wmScale})`;
+  }
+
+  // CERCHIO CTA: emerge mentre il watermark svanisce
+  const circleP = eio(clp(p, 0.52, 0.66));
+  if (_circleEl) {
+    _circleEl.style.opacity      = circleP.toString();
+    _circleEl.style.transform    = `translateY(-50%) scale(${0.3 + circleP * 0.7})`;
+    _circleEl.style.pointerEvents = circleP > 0.6 ? 'auto' : 'none';
+  }
+
+  // FASE 2 (0.32→0.52): hero content appare
+  const p2 = eio(clp(p, 0.32, 0.52));
   const ty2 = (1 - p2) * 28;
   if (heroInnerEl) heroInnerEl.style.opacity = p2.toString();
   if (heroBadgeEl) { heroBadgeEl.style.opacity = p2.toString(); heroBadgeEl.style.transform = `translateY(${ty2}px)`; }
   if (heroH1El)    { heroH1El.style.opacity    = p2.toString(); heroH1El.style.transform    = `translateY(${ty2}px)`; }
   if (heroSubEl)   { heroSubEl.style.opacity   = p2.toString(); heroSubEl.style.transform   = `translateY(${ty2}px)`; }
 
-  // FASE 3 (0.44→0.60): bottoni + stats + card
-  const p3 = eio(clp(p, 0.44, 0.60));
+  // FASE 3 (0.48→0.62): bottoni + stats + card
+  const p3 = eio(clp(p, 0.48, 0.62));
   const ty3 = (1 - p3) * 22;
   if (heroActEl)  { heroActEl.style.opacity  = p3.toString(); heroActEl.style.transform  = `translateY(${ty3}px)`; }
   if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
   if (heroVisEl)  { heroVisEl.style.opacity  = p3.toString(); heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
 
-  // FASE 4 (0.64→0.72): hero content sfuma
-  const heroFadeOut = eio(clp(p, 0.64, 0.72));
+  // FASE 4 (0.66→0.74): hero content sfuma
+  const heroFadeOut = eio(clp(p, 0.66, 0.74));
   if (heroInnerEl) heroInnerEl.style.opacity = Math.max(0, p2 - heroFadeOut).toString();
 
-  // FASE 4: code editor (0.70 → 1.0)
+  // FASE 5: code editor (0.72 → 1.0)
   const edEl = document.getElementById('codeEditor');
   if (edEl) {
-    edEl.style.opacity = eio(clp(p, 0.70, 0.78)).toString();
-    const tp = clp(p, 0.72, 1.0);
+    edEl.style.opacity = eio(clp(p, 0.72, 0.80)).toString();
+    const tp = clp(p, 0.74, 1.0);
     if (window._typeProgress) window._typeProgress(tp);
   }
 }
