@@ -114,8 +114,9 @@ nav {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(4.5rem, 13vw, 10rem);
   font-weight: 800; letter-spacing: -0.04em;
-  line-height: 0.92; color: var(--navy);
+  line-height: 0.95; color: var(--navy);
   text-align: center; white-space: nowrap;
+  width: 100%;
 }
 .hero-intro-word.accent { color: var(--aqua); }
 
@@ -657,8 +658,8 @@ footer {
 @media (max-width: 600px) {
   .services-grid { grid-template-columns:1fr; }
 
-  /* Hero intro word: permetti wrap su schermi piccoli */
-  .hero-intro-word { white-space: normal; font-size: clamp(3.2rem, 14vw, 6rem); }
+  /* Hero intro word: riempie lo schermo su mobile */
+  .hero-intro-word { white-space: nowrap; font-size: clamp(3rem, 16.5vw, 6rem); }
 
   /* Stat cards più compatte */
   .stat-card { padding:0.6rem 0.4rem; }
