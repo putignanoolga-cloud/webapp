@@ -1055,51 +1055,23 @@ function initLetterScatter() {
       heroTagEl.style.alignItems = 'center';
     }
 
-    // Calcola le zone libere intorno alle due righe di testo
-    const wordRects = [...heroIntroEl.querySelectorAll('.hero-intro-word')]
-      .map(w => w.getBoundingClientRect());
-    const r0 = wordRects[0]; // WEBSITE
-    const r1 = wordRects[1]; // SU MISURA
-    // Blocco testo complessivo
-    const blockL = Math.min(r0.left, r1.left);
-    const blockR = Math.max(r0.right, r1.right);
-    const blockT = r0.top;
-    const blockB = r1.bottom;
-
-    // Zone dove mettere i simboli (spazi vuoti visibili)
-    const zones = [
-      // sinistra di WEBSITE (la riga più corta)
-      { x1: blockL, x2: r0.left, y1: r0.top, y2: r0.bottom },
-      // destra di WEBSITE
-      { x1: r0.right, x2: blockR, y1: r0.top, y2: r0.bottom },
-      // sopra il blocco
-      { x1: blockL, x2: blockR, y1: Math.max(pad, blockT - 120), y2: blockT - 10 },
-      // sotto il blocco
-      { x1: blockL, x2: blockR, y1: blockB + 10, y2: Math.min(H - pad, blockB + 120) },
-      // estremo sinistro schermo
-      { x1: pad, x2: blockL - 20, y1: blockT, y2: blockB },
-      // estremo destro schermo
-      { x1: blockR + 20, x2: W - pad, y1: blockT, y2: blockB },
-    ].filter(z => z.x2 - z.x1 > 40 && z.y2 - z.y1 > 20);
-
-    const decoSizes = ['0.75rem','0.85rem','1rem','1.1rem','0.95rem'];
+    // Simboli decorativi sparsi su tutta la viewport
+    const decoSizes = ['0.7rem','0.8rem','0.95rem','1.05rem','0.85rem'];
     const decoColors = ['var(--aqua)','var(--rose)','var(--navy)','var(--grey)'];
-    const decoCount = 32;
-    for (let i = 0; i < decoCount; i++) {
-      const zone = zones[i % zones.length];
+    for (let i = 0; i < 36; i++) {
       const token = DECO_TOKENS[Math.floor(Math.random() * DECO_TOKENS.length)];
       const el = document.createElement('div');
       el.className = 'ltr deco';
       el.textContent = token;
       el.style.fontSize    = decoSizes[Math.floor(Math.random() * decoSizes.length)];
       el.style.color       = decoColors[Math.floor(Math.random() * decoColors.length)];
-      const baseOp = 0.15 + Math.random() * 0.25;
+      const baseOp = 0.10 + Math.random() * 0.18;
       el.dataset.baseOp    = baseOp.toString();
       el.style.opacity     = baseOp.toString();
       el.style.fontFamily  = "'Space Grotesk', monospace";
       el.style.fontWeight  = '500';
-      el.style.left        = (zone.x1 + Math.random() * (zone.x2 - zone.x1)) + 'px';
-      el.style.top         = (zone.y1 + Math.random() * (zone.y2 - zone.y1)) + 'px';
+      el.style.left        = (pad + Math.random() * (W - pad * 2)) + 'px';
+      el.style.top         = (pad + Math.random() * (H - pad * 2)) + 'px';
       _lCanvas.appendChild(el);
       _deco.push(el);
     }
@@ -1113,9 +1085,9 @@ function setLetters(progress) {
     el.style.transform = `translate(${dx*(1-progress)}px, ${dy*(1-progress)}px)`;
     if (!isSpace) el.style.opacity = (0.08 + progress * 0.92).toString();
   });
-  // Gli elementi decorativi scompaiono man mano che le lettere si ricompongono
-  const decoOp = Math.max(0, 1 - progress * 2.5);
-  _deco.forEach(el => { el.style.opacity = (parseFloat(el.dataset.baseOp || 0.2) * decoOp).toString(); });
+  // I simboli restano sempre visibili: max opacità nella fase scatter, minima nell'assemblato
+  const decoOp = 0.35 + (1 - progress) * 0.65;
+  _deco.forEach(el => { el.style.opacity = (parseFloat(el.dataset.baseOp || 0.15) * decoOp).toString(); });
 }
 
 // Prepara i data-text sulle parole prima di spezzarle
