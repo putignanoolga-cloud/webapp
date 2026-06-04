@@ -1166,29 +1166,46 @@ requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const FILE_TOKENS = [
-    'index.html','style.css','app.js','main.js','script.js',
-    'layout.css','reset.css','components.js','router.js',
-    'index.css','utils.js','api.js','config.js','package.json',
-    '<div>','<section>','<header>','<footer>','<nav>',
-    '.container {}','@media','const fetch','async/await',
-    'flex:1','grid-template','border-radius','transition:',
-    'querySelector','addEventListener','useState','return </>',
+  const CHIPS = [
+    { text: 'index.html',      bg: '#D4720A', fg: '#FDF6EE' },
+    { text: 'style.css',       bg: '#2C6E9A', fg: '#FDF6EE' },
+    { text: 'app.js',          bg: '#F0C040', fg: '#2C1A0E' },
+    { text: 'main.js',         bg: '#F0C040', fg: '#2C1A0E' },
+    { text: 'router.js',       bg: '#7EC8A4', fg: '#2C1A0E' },
+    { text: 'package.json',    bg: '#C45A3A', fg: '#FDF6EE' },
+    { text: 'components.js',   bg: '#F0C040', fg: '#2C1A0E' },
+    { text: 'reset.css',       bg: '#2C6E9A', fg: '#FDF6EE' },
+    { text: 'utils.js',        bg: '#7EC8A4', fg: '#2C1A0E' },
+    { text: 'api.js',          bg: '#9A8070', fg: '#FDF6EE' },
+    { text: '<div>',           bg: '#E8A87C', fg: '#2C1A0E' },
+    { text: '<section>',       bg: '#E8A87C', fg: '#2C1A0E' },
+    { text: 'const fetch()',   bg: '#F0C040', fg: '#2C1A0E' },
+    { text: 'async/await',     bg: '#7EC8A4', fg: '#2C1A0E' },
+    { text: '@media',          bg: '#2C6E9A', fg: '#FDF6EE' },
+    { text: 'flex: 1',         bg: '#2C6E9A', fg: '#FDF6EE' },
+    { text: 'grid-template',   bg: '#2C6E9A', fg: '#FDF6EE' },
+    { text: 'transition: all', bg: '#9A8070', fg: '#FDF6EE' },
+    { text: 'addEventListener',bg: '#F0C040', fg: '#2C1A0E' },
+    { text: 'border-radius',   bg: '#C45A3A', fg: '#FDF6EE' },
+    { text: 'config.js',       bg: '#9A8070', fg: '#FDF6EE' },
+    { text: 'layout.css',      bg: '#2C6E9A', fg: '#FDF6EE' },
   ];
 
-  const N = 220;
+  const N = 180;
   const vParticles = [];
 
   function initVortex() {
-    const R = Math.min(window.innerWidth, window.innerHeight) * 0.44;
+    vParticles.length = 0;
+    const R = Math.min(window.innerWidth, window.innerHeight) * 0.46;
     for (let i = 0; i < N; i++) {
-      const t = i / N;
+      const t    = i / N;
+      const chip = CHIPS[i % CHIPS.length];
       vParticles.push({
-        token:      FILE_TOKENS[i % FILE_TOKENS.length],
-        baseAngle:  t * Math.PI * 14,
-        baseRadius: 40 + t * R,
-        fontSize:   9 + Math.random() * 6,
-        color:      ['#D4720A','#C45A3A','#2C1A0E','#9A8070'][Math.floor(Math.random()*4)],
+        chip,
+        baseAngle:  t * Math.PI * 16,
+        baseRadius: 55 + t * R,
+        fontSize:   10 + Math.random() * 5,
+        phase:      Math.random() * Math.PI * 2, // per oscillazione
       });
     }
   }
@@ -1199,51 +1216,97 @@ requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
     canvas.height = window.innerHeight;
   }
   resize();
-  window.addEventListener('resize', () => { resize(); vParticles.length=0; initVortex(); }, { passive: true });
+  window.addEventListener('resize', () => { resize(); initVortex(); }, { passive: true });
 
   function drawVortex(vp) {
     const W = canvas.width, H = canvas.height;
     const cx = W / 2, cy = H / 2;
     ctx.clearRect(0, 0, W, H);
 
-    const spin   = vp * Math.PI * 8;
-    const inward = Math.min(1, vp * 1.1);
+    // Sfondo scuro progressivo
+    const bgAlpha = vp * 0.88;
+    ctx.fillStyle = `rgba(244,237,224,${bgAlpha})`;
+    ctx.fillRect(0, 0, W, H);
 
-    // Buco nero
-    const holeR = vp * vp * Math.min(W, H) * 0.55;
-    if (holeR > 1) {
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, holeR * 1.4);
-      g.addColorStop(0,   'rgba(44,26,14,1)');
-      g.addColorStop(0.5, 'rgba(44,26,14,0.85)');
-      g.addColorStop(1,   'rgba(44,26,14,0)');
-      ctx.fillStyle = g;
+    const spin   = vp * Math.PI * 10;
+    const inward = Math.pow(vp, 0.7);
+
+    // Corona / alone del buco nero
+    const holeR = vp * vp * Math.min(W, H) * 0.38;
+    if (holeR > 2) {
+      // Bagliore esterno (corona)
+      const corona = ctx.createRadialGradient(cx, cy, holeR * 0.5, cx, cy, holeR * 2.2);
+      corona.addColorStop(0,   'rgba(212,114,10,0.0)');
+      corona.addColorStop(0.3, `rgba(212,114,10,${0.18 * vp})`);
+      corona.addColorStop(0.6, `rgba(196,90,58,${0.10 * vp})`);
+      corona.addColorStop(1,   'rgba(196,90,58,0)');
+      ctx.fillStyle = corona;
       ctx.beginPath();
-      ctx.arc(cx, cy, holeR * 1.4, 0, Math.PI * 2);
+      ctx.arc(cx, cy, holeR * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Il buco vero — nero pieno
+      const hole = ctx.createRadialGradient(cx, cy, 0, cx, cy, holeR);
+      hole.addColorStop(0,   'rgba(10,6,3,1)');
+      hole.addColorStop(0.75,'rgba(20,10,5,1)');
+      hole.addColorStop(1,   'rgba(44,26,14,0)');
+      ctx.fillStyle = hole;
+      ctx.beginPath();
+      ctx.arc(cx, cy, holeR * 1.1, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Testi in spirale
+    // Chip / etichette in spirale
     ctx.save();
-    vParticles.forEach(p => {
+    // ordina per radius così i più lontani si disegnano prima
+    const sorted = [...vParticles].sort((a,b) => b.baseRadius - a.baseRadius);
+    sorted.forEach(p => {
       const angle  = p.baseAngle + spin;
-      const radius = p.baseRadius * (1 - inward * 0.96);
+      const radius = p.baseRadius * (1 - inward * 0.97);
+      if (radius < 4) return;
       const x = cx + Math.cos(angle) * radius;
       const y = cy + Math.sin(angle) * radius;
-      const alpha = Math.max(0, 0.7 - inward * 0.75);
-      if (alpha <= 0) return;
+
+      // distanza dal centro → fade
+      const dist = Math.hypot(x - cx, y - cy);
+      const fadeHole = Math.max(0, (dist - holeR * 1.1) / (holeR * 0.6 + 1));
+      const alpha = Math.min(1, fadeHole) * (1 - Math.pow(vp, 2.5) * 0.9);
+      if (alpha < 0.02) return;
+
+      const fs = p.fontSize;
+      ctx.font = `600 ${fs}px 'Space Grotesk', monospace`;
+      const tw = ctx.measureText(p.chip.text).width;
+      const pad = 5, rh = fs + pad * 2, rw = tw + pad * 2.5, rx = -rw / 2, ry = -rh / 2;
+      const br = 5;
+
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle + Math.PI / 2);
-      ctx.font = `500 ${p.fontSize}px 'Space Grotesk', monospace`;
-      ctx.fillStyle = p.color;
       ctx.globalAlpha = alpha;
-      ctx.fillText(p.token, 0, 0);
+
+      // Pill background
+      ctx.beginPath();
+      ctx.moveTo(rx + br, ry);
+      ctx.lineTo(rx + rw - br, ry);
+      ctx.quadraticCurveTo(rx + rw, ry, rx + rw, ry + br);
+      ctx.lineTo(rx + rw, ry + rh - br);
+      ctx.quadraticCurveTo(rx + rw, ry + rh, rx + rw - br, ry + rh);
+      ctx.lineTo(rx + br, ry + rh);
+      ctx.quadraticCurveTo(rx, ry + rh, rx, ry + rh - br);
+      ctx.lineTo(rx, ry + br);
+      ctx.quadraticCurveTo(rx, ry, rx + br, ry);
+      ctx.closePath();
+      ctx.fillStyle = p.chip.bg;
+      ctx.fill();
+
+      // Testo
+      ctx.fillStyle = p.chip.fg;
+      ctx.fillText(p.chip.text, rx + pad * 1.25, ry + pad + fs * 0.82);
       ctx.restore();
     });
     ctx.restore();
   }
 
-  // Esposto globalmente per essere chiamato da onHeroScroll
   window._drawVortex = drawVortex;
   drawVortex(0);
 })();
