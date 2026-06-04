@@ -137,10 +137,10 @@ nav {
   display: flex; align-items: center; justify-content: center;
   pointer-events: none; z-index: 5;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
   font-weight: 600; letter-spacing: -0.02em;
   color: var(--navy); text-align: center;
-  line-height: 1.4;
+  white-space: nowrap; line-height: 1.4;
   opacity: 0;
 }
 
@@ -553,9 +553,7 @@ h2 { position: relative; display: inline-block; }
   </div>
 
   <!-- FASE 1.5: scritta simpatica al centro tra le due fasi -->
-  <div class="hero-tagline" id="heroTagline">
-    Perché il tuo sito dovrebbe lavorare<br>mentre tu dormi. 🌙
-  </div>
+  <div class="hero-tagline" id="heroTagline">Perché il tuo sito dovrebbe lavorare mentre tu dormi. 🌙</div>
 
   <div class="hero-inner">
     <div class="hero-content">
@@ -1037,11 +1035,10 @@ function initLetterScatter() {
     });
 
     // Zoom dal centro esatto del blocco testo
-    const textCenterY = (minY + maxY) / 2;
+    const textCenterY = window.innerHeight / 2;
     _lCanvas.style.transformOrigin = `50% ${textCenterY}px`;
 
-    // Posiziona la tagline nel GAP tra le due righe
-    if (heroTagEl && isFinite(textCenterY)) {
+    if (heroTagEl) {
       heroTagEl.style.top    = textCenterY + 'px';
       heroTagEl.style.bottom = 'auto';
       heroTagEl.style.transform = 'translateY(-50%)';
