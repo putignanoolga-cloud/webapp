@@ -569,11 +569,51 @@ footer {
   border-top:1px solid rgba(44,26,14,0.08);
 }
 
+/* ── HAMBURGER ── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column; gap: 5px; cursor: pointer;
+  background: none; border: none; padding: 4px;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--navy); border-radius: 2px;
+  transition: all 0.3s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+.nav-mobile-menu {
+  display: none;
+  position: fixed; top: 57px; left: 0; right: 0;
+  background: rgba(240,230,216,0.98); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(44,26,14,0.1);
+  padding: 1.2rem 1.5rem 1.5rem; z-index: 99;
+  flex-direction: column; gap: 0;
+}
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-menu a {
+  font-size: 1.05rem; font-weight: 500; color: var(--navy);
+  text-decoration: none; padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(44,26,14,0.08);
+  letter-spacing: 0.01em;
+}
+.nav-mobile-menu a:last-child { border-bottom: none; }
+.nav-mobile-menu .mob-cta {
+  margin-top: 0.8rem;
+  background: var(--navy); color: var(--white) !important;
+  text-align: center; border-radius: 50px;
+  padding: 0.85rem 1rem !important;
+  font-weight: 700 !important; border-bottom: none !important;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   nav { padding:1rem 1.2rem; }
   .nav-links { display:none; }
-  .nav-cta { padding:0.45rem 1rem; font-size:0.8rem; }
+  .nav-cta { display:none; }
+  .nav-hamburger { display:flex; }
 
   .hero-sticky { padding:0 1.2rem; }
   .hero-inner { grid-template-columns:1fr; gap:2rem; }
@@ -607,10 +647,41 @@ footer {
   .cta-actions { flex-direction:column; align-items:center; }
   .cta-actions a { width:100%; max-width:320px; justify-content:center; }
   footer { padding:1.2rem; font-size:0.72rem; }
+
+  /* Code editor: nascondi sidebar, editor a larghezza schermo */
+  .ce-sidebar { display:none !important; }
+  #codeEditor { padding:0.5rem 1rem; }
+  .ce-bar { width:min(520px, 90vw); }
+  .ce-body { width:min(520px, 90vw); min-height:300px; max-height:50vh; }
 }
 
 @media (max-width: 600px) {
   .services-grid { grid-template-columns:1fr; }
+
+  /* Hero intro word: permetti wrap su schermi piccoli */
+  .hero-intro-word { white-space: normal; font-size: clamp(3.2rem, 14vw, 6rem); }
+
+  /* Stat cards più compatte */
+  .stat-card { padding:0.6rem 0.4rem; }
+  .stat-num { font-size:1rem; }
+  .stat-label { font-size:0.6rem; }
+
+  /* Project thumb più bassa */
+  .project-thumb { height:140px; font-size:2.8rem; }
+
+  /* Testimonials layout */
+  .testimonials-grid { grid-template-columns:1fr; }
+
+  /* Sezioni */
+  section { padding:2.8rem 1rem; }
+  h2 { font-size:clamp(1.6rem,8vw,2.2rem); }
+
+  /* Code editor su mobile piccolo */
+  .ce-bar { width:92vw; }
+  .ce-body { width:92vw; min-height:260px; }
+  .ce-code { font-size:0.72rem; }
+
+  footer { padding:1rem; }
 }
 
 /* ── SECTION HEADING UNDERLINE DRAW ── */
@@ -641,7 +712,17 @@ h2 { position: relative; display: inline-block; }
     <li><a href="#clienti">Clienti</a></li>
   </ul>
   <a href="preventivo.html" class="nav-cta">Preventivo →</a>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="#portfolio" class="mob-link">Progetti</a>
+  <a href="#servizi" class="mob-link">Servizi</a>
+  <a href="#processo" class="mob-link">Come lavoro</a>
+  <a href="#clienti" class="mob-link">Clienti</a>
+  <a href="preventivo.html" class="mob-cta">Preventivo →</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1402,6 +1483,25 @@ requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
   };
 
   updateLines(0);
+})();
+
+// ── HAMBURGER MENU ──
+(function() {
+  const btn  = document.getElementById('navHamburger');
+  const menu = document.getElementById('navMobileMenu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      menu.classList.remove('open');
+      btn.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
 })();
 
 // ── REVEAL ON SCROLL ──
