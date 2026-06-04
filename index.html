@@ -102,14 +102,12 @@ nav {
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
 }
 
-/* Intro fullscreen */
+/* Intro fullscreen — invisibile, usato solo per misurare posizioni */
 .hero-intro {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  pointer-events: none;
-  transform-origin: center center;
-  transform: scale(1);
+  pointer-events: none; visibility: hidden;
   z-index: 3;
 }
 .hero-intro-word {
@@ -117,9 +115,23 @@ nav {
   font-size: clamp(4.5rem, 13vw, 10rem);
   font-weight: 800; letter-spacing: -0.04em;
   line-height: 0.92; color: var(--navy);
-  text-align: center;
+  text-align: center; white-space: nowrap;
 }
 .hero-intro-word.accent { color: var(--aqua); }
+
+/* Canvas lettere sparse */
+#letterCanvas {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 3;
+  overflow: hidden;
+  transform-origin: center center;
+}
+.ltr {
+  position: absolute; left: 0; top: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+  user-select: none; will-change: transform, opacity;
+}
 .hero-tagline {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -965,49 +977,120 @@ const heroSubEl    = document.querySelector('.hero-sub');
 const heroActEl    = document.querySelector('.hero-actions');
 const heroStatEl   = document.querySelector('.hero-stats');
 const heroVisEl    = document.querySelector('.hero-visual');
+const heroStickyEl = document.querySelector('.hero-sticky');
 
-function eio(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t; } // ease-in-out
-function clp(t, a, b) { return Math.max(0, Math.min(1, (t-a)/(b-a))); } // clamp to range
+function eio(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function clp(t, a, b) { return Math.max(0, Math.min(1, (t-a)/(b-a))); }
 
+// ── LETTER SCATTER ──
+let _letters = [];
+let _lCanvas  = null;
+
+function initLetterScatter() {
+  const wordEls = heroIntroEl.querySelectorAll('.hero-intro-word');
+  const charData = [];
+
+  wordEls.forEach(wordEl => {
+    const fontSize = getComputedStyle(wordEl).fontSize;
+    const color    = getComputedStyle(wordEl).color;
+    wordEl.innerHTML = '';
+    [...wordEl.dataset.text].forEach(ch => {
+      const span = document.createElement('span');
+      span.textContent = ch;
+      span.style.cssText = 'display:inline-block;';
+      wordEl.appendChild(span);
+      charData.push({ span, fontSize, color, isSpace: ch === ' ' });
+    });
+  });
+
+  requestAnimationFrame(() => {
+    _lCanvas = document.createElement('div');
+    _lCanvas.id = 'letterCanvas';
+    heroStickyEl.appendChild(_lCanvas);
+
+    const W = window.innerWidth, H = window.innerHeight;
+
+    charData.forEach(({ span, fontSize, color, isSpace }) => {
+      if (isSpace) return;
+      const rect = span.getBoundingClientRect();
+      if (!rect.width) return;
+
+      const pad = 80;
+      const sx = pad + Math.random() * (W - pad * 2);
+      const sy = pad + Math.random() * (H - pad * 2);
+
+      const el = document.createElement('div');
+      el.className = 'ltr';
+      el.textContent = span.textContent;
+      el.style.fontSize = fontSize;
+      el.style.color    = color;
+      el.style.left     = rect.left + 'px';
+      el.style.top      = rect.top  + 'px';
+      _lCanvas.appendChild(el);
+      _letters.push({ el, dx: sx - rect.left, dy: sy - rect.top });
+    });
+
+    // Posizioni iniziali (sparse)
+    setLetters(0);
+  });
+}
+
+function setLetters(progress) {
+  _letters.forEach(({ el, dx, dy }) => {
+    const x = dx * (1 - progress);
+    const y = dy * (1 - progress);
+    el.style.transform = `translate(${x}px, ${y}px)`;
+    el.style.opacity   = (0.08 + progress * 0.92).toString();
+  });
+}
+
+// Prepara i data-text sulle parole prima di spezzarle
+heroIntroEl.querySelectorAll('.hero-intro-word').forEach(w => {
+  w.dataset.text = w.textContent;
+});
+initLetterScatter();
+
+// ── HERO SCROLL ──
 function onHeroScroll() {
   const scrolled = window.scrollY;
   const heroTop  = heroEl.offsetTop;
   const heroH    = heroEl.offsetHeight - window.innerHeight;
   const p = Math.max(0, Math.min(1, (scrolled - heroTop) / heroH));
 
-  // FASE 1 — zona morta 0→0.10 (completamente statico), poi zoom 0.10→0.55
-  const p1 = eio(clp(p, 0.10, 0.55));
-  const introScale = 1 + p1 * 9;
+  // FASE 0 (0→0.12): lettere si ricompongono dal caos
+  setLetters(eio(clp(p, 0, 0.12)));
+
+  // FASE 1 (0.12→0.55): canvas lettere fa zoom in
+  const p1 = eio(clp(p, 0.12, 0.55));
+  const introScale   = 1 + p1 * 9;
   const introOpacity = p1 < 0.60 ? 1 : 1 - eio(clp(p1, 0.60, 1));
-  if (heroIntroEl) {
-    heroIntroEl.style.transform = `scale(${introScale})`;
-    heroIntroEl.style.opacity   = Math.max(0, introOpacity);
+  if (_lCanvas) {
+    _lCanvas.style.transform = `scale(${introScale})`;
+    _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // FASE 1.5: scritta appare MENTRE le lettere sono enormi, poi svanisce
+  // FASE 1.5: scritta simpatica al centro durante lo zoom
   const tagIn  = eio(clp(p, 0.35, 0.48));
   const tagOut = eio(clp(p, 0.56, 0.68));
-  const tagOpacity = Math.max(0, tagIn - tagOut);
-  if (heroTagEl) heroTagEl.style.opacity = tagOpacity;
+  if (heroTagEl) heroTagEl.style.opacity = Math.max(0, tagIn - tagOut).toString();
 
-  // FASE 2 (0.64→0.84): appare hero-inner con titolo e sottotitolo
+  // FASE 2 (0.64→0.84): titolo + sottotitolo
   const p2 = eio(clp(p, 0.64, 0.84));
-  if (heroInnerEl) heroInnerEl.style.opacity = p2;
-  const translateY2 = (1 - p2) * 28;
-  if (heroBadgeEl) { heroBadgeEl.style.opacity = p2; heroBadgeEl.style.transform = `translateY(${translateY2}px)`; }
-  if (heroH1El)    { heroH1El.style.opacity    = p2; heroH1El.style.transform    = `translateY(${translateY2}px)`; }
-  if (heroSubEl)   { heroSubEl.style.opacity   = p2; heroSubEl.style.transform   = `translateY(${translateY2}px)`; }
+  const ty2 = (1 - p2) * 28;
+  if (heroInnerEl) heroInnerEl.style.opacity = p2.toString();
+  if (heroBadgeEl) { heroBadgeEl.style.opacity = p2.toString(); heroBadgeEl.style.transform = `translateY(${ty2}px)`; }
+  if (heroH1El)    { heroH1El.style.opacity    = p2.toString(); heroH1El.style.transform    = `translateY(${ty2}px)`; }
+  if (heroSubEl)   { heroSubEl.style.opacity   = p2.toString(); heroSubEl.style.transform   = `translateY(${ty2}px)`; }
 
-  // FASE 3 (0.82→0.98): bottoni, statistiche e card visuale
+  // FASE 3 (0.82→0.98): bottoni + stats + card
   const p3 = eio(clp(p, 0.82, 0.98));
-  const translateY3 = (1 - p3) * 22;
-  if (heroActEl)  { heroActEl.style.opacity  = p3; heroActEl.style.transform  = `translateY(${translateY3}px)`; }
-  if (heroStatEl) { heroStatEl.style.opacity = p3; heroStatEl.style.transform = `translateY(${translateY3}px)`; }
-  if (heroVisEl)  { heroVisEl.style.opacity  = p3; heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
+  const ty3 = (1 - p3) * 22;
+  if (heroActEl)  { heroActEl.style.opacity  = p3.toString(); heroActEl.style.transform  = `translateY(${ty3}px)`; }
+  if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
+  if (heroVisEl)  { heroVisEl.style.opacity  = p3.toString(); heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
 }
 
 window.addEventListener('scroll', onHeroScroll, { passive: true });
-// Chiama dopo il primo layout per evitare il salto iniziale
 requestAnimationFrame(() => requestAnimationFrame(onHeroScroll));
 
 // ── REVEAL ON SCROLL ──
