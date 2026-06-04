@@ -113,6 +113,8 @@ nav {
   display: grid; grid-template-columns: 1fr 1fr;
   align-items: center; gap: 3rem; position: relative; z-index: 1;
 }
+.hero-content { will-change: transform; transition: transform 0.1s linear; }
+.hero-visual  { will-change: transform; transition: transform 0.1s linear; }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(196,98,26,0.1); border: 1px solid rgba(196,98,26,0.3);
@@ -900,11 +902,62 @@ footer {
 // ── CURSOR ──
 const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
+
+// ── HERO PARALLAX ──
+const heroSection = document.getElementById('hero');
+const heroContent = document.querySelector('.hero-content');
+const heroVisual  = document.querySelector('.hero-visual');
+const heroBadge   = document.querySelector('.hero-badge');
+const heroGrid    = document.querySelector('.hero-grid');
+
+let heroActive = false;
+let tContent = {x:0,y:0}, tVisual = {x:0,y:0}, tBadge = {x:0,y:0}, tGrid = {x:0,y:0};
+let cContent = {x:0,y:0}, cVisual = {x:0,y:0}, cBadge = {x:0,y:0}, cGrid = {x:0,y:0};
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function animateParallax() {
+  if (!heroActive) return;
+  cContent.x = lerp(cContent.x, tContent.x, 0.06);
+  cContent.y = lerp(cContent.y, tContent.y, 0.06);
+  cVisual.x  = lerp(cVisual.x,  tVisual.x,  0.04);
+  cVisual.y  = lerp(cVisual.y,  tVisual.y,  0.04);
+  cBadge.x   = lerp(cBadge.x,   tBadge.x,   0.08);
+  cBadge.y   = lerp(cBadge.y,   tBadge.y,   0.08);
+  cGrid.x    = lerp(cGrid.x,    tGrid.x,    0.03);
+  cGrid.y    = lerp(cGrid.y,    tGrid.y,    0.03);
+  if (heroContent) heroContent.style.transform = `translate(${cContent.x}px, ${cContent.y}px)`;
+  if (heroVisual)  heroVisual.style.transform  = `translate(${cVisual.x}px,  ${cVisual.y}px)`;
+  if (heroBadge)   heroBadge.style.transform   = `translate(${cBadge.x}px,   ${cBadge.y}px)`;
+  if (heroGrid)    heroGrid.style.transform     = `translate(${cGrid.x}px,    ${cGrid.y}px)`;
+  requestAnimationFrame(animateParallax);
+}
+
 document.addEventListener('mousemove', e => {
   cur.style.left  = e.clientX - 6 + 'px';
   cur.style.top   = e.clientY - 6 + 'px';
   ring.style.left = e.clientX - 18 + 'px';
   ring.style.top  = e.clientY - 18 + 'px';
+
+  // Parallax solo se il mouse è nella sezione hero
+  if (heroSection) {
+    const rect = heroSection.getBoundingClientRect();
+    if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+      const cx = (e.clientX / window.innerWidth  - 0.5);
+      const cy = (e.clientY / window.innerHeight - 0.5);
+      tContent.x = cx * -12;  tContent.y = cy * -8;
+      tVisual.x  = cx *  20;  tVisual.y  = cy *  14;
+      tBadge.x   = cx * -6;   tBadge.y   = cy * -4;
+      tGrid.x    = cx *  8;   tGrid.y    = cy *  6;
+      if (!heroActive) { heroActive = true; animateParallax(); }
+    } else {
+      // Reset graduale quando esci dall'hero
+      tContent.x = tContent.y = 0;
+      tVisual.x  = tVisual.y  = 0;
+      tBadge.x   = tBadge.y   = 0;
+      tGrid.x    = tGrid.y    = 0;
+    }
+  }
 });
 document.querySelectorAll('a,button,.project-card,.service-cell,.testi-card').forEach(el => {
   el.addEventListener('mouseenter', () => { cur.style.transform='scale(2.5)'; ring.style.transform='scale(1.5)'; });
