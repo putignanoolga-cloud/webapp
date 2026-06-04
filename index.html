@@ -78,7 +78,7 @@ nav {
 
 /* ── HERO ── */
 #hero {
-  height: 230vh;
+  height: 190vh;
   position: relative;
 }
 .hero-sticky {
@@ -1412,21 +1412,21 @@ const _wmEl     = document.getElementById('heroWatermark');
 const _circleEl = document.getElementById('heroCircleCta');
 
 function applyHero(p) {
-  // FASE 0 (0→0.10): lettere si ricompongono
-  setLetters(eio(clp(p, 0, 0.10)));
+  // FASE 0 (0→0.07): lettere si ricompongono
+  setLetters(eio(clp(p, 0, 0.07)));
 
-  // FASE 1 (0.08→0.30): zoom + dissolvenza
-  const p1 = eio(clp(p, 0.08, 0.30));
+  // FASE 1 (0.05→0.22): zoom + dissolvenza
+  const p1 = eio(clp(p, 0.05, 0.22));
   const introOpacity = p1 < 0.50 ? 1 : 1 - eio(clp(p1, 0.50, 1.0));
   if (_lCanvas) {
     _lCanvas.style.transform = `scale(${1 + p1 * 0.45})`;
     _lCanvas.style.opacity   = Math.max(0, introOpacity).toString();
   }
 
-  // WATERMARK: breve flash tra canvas e hero (0.30→0.38)
-  const wmIn      = eio(clp(p, 0.30, 0.36));
-  const wmOut     = eio(clp(p, 0.36, 0.42));
-  const heroAlpha = eio(clp(p, 0.34, 0.48));
+  // WATERMARK: breve flash (0.22→0.32)
+  const wmIn      = eio(clp(p, 0.22, 0.28));
+  const wmOut     = eio(clp(p, 0.28, 0.34));
+  const heroAlpha = eio(clp(p, 0.26, 0.40));
   const wmOp      = Math.max(0, wmIn - wmOut - heroAlpha);
   if (_wmEl) {
     _wmEl.style.opacity   = wmOp.toString();
@@ -1435,38 +1435,38 @@ function applyHero(p) {
     _wmEl.style.transform = `translateX(${wmShift}%) scale(${wmScale})`;
   }
 
-  // CERCHIO CTA: emerge da p=0.38
-  const circleP = eio(clp(p, 0.38, 0.50));
+  // CERCHIO CTA: emerge da p=0.30
+  const circleP = eio(clp(p, 0.30, 0.42));
   if (_circleEl) {
     _circleEl.style.opacity      = circleP.toString();
     _circleEl.style.transform    = `translateY(-50%) scale(${0.3 + circleP * 0.7})`;
     _circleEl.style.pointerEvents = circleP > 0.5 ? 'auto' : 'none';
   }
 
-  // FASE 2 (0.34→0.50): hero content appare
-  const p2 = eio(clp(p, 0.34, 0.50));
+  // FASE 2 (0.26→0.42): hero content appare
+  const p2 = eio(clp(p, 0.26, 0.42));
   const ty2 = (1 - p2) * 28;
   if (heroInnerEl) heroInnerEl.style.opacity = p2.toString();
   if (heroBadgeEl) { heroBadgeEl.style.opacity = p2.toString(); heroBadgeEl.style.transform = `translateY(${ty2}px)`; }
   if (heroH1El)    { heroH1El.style.opacity    = p2.toString(); heroH1El.style.transform    = `translateY(${ty2}px)`; }
   if (heroSubEl)   { heroSubEl.style.opacity   = p2.toString(); heroSubEl.style.transform   = `translateY(${ty2}px)`; }
 
-  // FASE 3 (0.46→0.58): bottoni + stats + card
-  const p3 = eio(clp(p, 0.46, 0.58));
+  // FASE 3 (0.38→0.52): bottoni + stats + card
+  const p3 = eio(clp(p, 0.38, 0.52));
   const ty3 = (1 - p3) * 22;
   if (heroActEl)  { heroActEl.style.opacity  = p3.toString(); heroActEl.style.transform  = `translateY(${ty3}px)`; }
   if (heroStatEl) { heroStatEl.style.opacity = p3.toString(); heroStatEl.style.transform = `translateY(${ty3}px)`; }
   if (heroVisEl)  { heroVisEl.style.opacity  = p3.toString(); heroVisEl.style.transform  = `scale(${0.88 + p3*0.12})`; }
 
-  // FASE 4 (0.60→0.68): hero content sfuma
-  const heroFadeOut = eio(clp(p, 0.60, 0.68));
+  // FASE 4 (0.54→0.62): hero content sfuma
+  const heroFadeOut = eio(clp(p, 0.54, 0.62));
   if (heroInnerEl) heroInnerEl.style.opacity = Math.max(0, p2 - heroFadeOut).toString();
 
-  // FASE 5: code editor (0.65 → 1.0)
+  // FASE 5: code editor (0.60 → 1.0)
   const edEl = document.getElementById('codeEditor');
   if (edEl) {
-    edEl.style.opacity = eio(clp(p, 0.65, 0.74)).toString();
-    const tp = clp(p, 0.68, 1.0);
+    edEl.style.opacity = eio(clp(p, 0.60, 0.68)).toString();
+    const tp = clp(p, 0.62, 1.0);
     if (window._typeProgress) window._typeProgress(tp);
   }
 }
