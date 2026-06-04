@@ -950,6 +950,9 @@ h2 { position: relative; display: inline-block; }
 </footer>
 
 <script>
+// Forza sempre il ritorno in cima alla pagina al caricamento
+history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
 // ── SCROLL PROGRESS ──
 const prog = document.getElementById('progress');
 
