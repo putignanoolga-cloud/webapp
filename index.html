@@ -1055,25 +1055,30 @@ function initLetterScatter() {
       heroTagEl.style.alignItems = 'center';
     }
 
-    // Simboli decorativi sparsi su tutta la viewport
-    const decoSizes = ['0.7rem','0.8rem','0.95rem','1.05rem','0.85rem'];
+    // Simboli decorativi: griglia uniforme + jitter per coprire tutto lo schermo
+    const decoSizes = ['0.8rem','0.95rem','1.1rem','1.25rem','1rem','0.85rem'];
     const decoColors = ['var(--aqua)','var(--rose)','var(--navy)','var(--grey)'];
-    for (let i = 0; i < 36; i++) {
-      const token = DECO_TOKENS[Math.floor(Math.random() * DECO_TOKENS.length)];
-      const el = document.createElement('div');
-      el.className = 'ltr deco';
-      el.textContent = token;
-      el.style.fontSize    = decoSizes[Math.floor(Math.random() * decoSizes.length)];
-      el.style.color       = decoColors[Math.floor(Math.random() * decoColors.length)];
-      const baseOp = 0.10 + Math.random() * 0.18;
-      el.dataset.baseOp    = baseOp.toString();
-      el.style.opacity     = baseOp.toString();
-      el.style.fontFamily  = "'Space Grotesk', monospace";
-      el.style.fontWeight  = '500';
-      el.style.left        = (pad + Math.random() * (W - pad * 2)) + 'px';
-      el.style.top         = (pad + Math.random() * (H - pad * 2)) + 'px';
-      _lCanvas.appendChild(el);
-      _deco.push(el);
+    const cols = 8, rows = 6;
+    const cellW = W / cols, cellH = H / rows;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const token = DECO_TOKENS[Math.floor(Math.random() * DECO_TOKENS.length)];
+        const el = document.createElement('div');
+        el.className = 'ltr deco';
+        el.textContent = token;
+        el.style.fontSize    = decoSizes[Math.floor(Math.random() * decoSizes.length)];
+        el.style.color       = decoColors[Math.floor(Math.random() * decoColors.length)];
+        const baseOp = 0.22 + Math.random() * 0.28;
+        el.dataset.baseOp    = baseOp.toString();
+        el.style.opacity     = baseOp.toString();
+        el.style.fontFamily  = "'Space Grotesk', monospace";
+        el.style.fontWeight  = '500';
+        // posizione centrata nella cella + jitter casuale
+        el.style.left = (c * cellW + cellW * 0.1 + Math.random() * cellW * 0.8) + 'px';
+        el.style.top  = (r * cellH + cellH * 0.1 + Math.random() * cellH * 0.8) + 'px';
+        _lCanvas.appendChild(el);
+        _deco.push(el);
+      }
     }
 
     setLetters(0);
@@ -1086,7 +1091,7 @@ function setLetters(progress) {
     if (!isSpace) el.style.opacity = (0.08 + progress * 0.92).toString();
   });
   // I simboli restano sempre visibili: max opacità nella fase scatter, minima nell'assemblato
-  const decoOp = 0.35 + (1 - progress) * 0.65;
+  const decoOp = 0.45 + (1 - progress) * 0.55;
   _deco.forEach(el => { el.style.opacity = (parseFloat(el.dataset.baseOp || 0.15) * decoOp).toString(); });
 }
 
