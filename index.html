@@ -110,13 +110,16 @@ nav {
   pointer-events: none; visibility: hidden;
   z-index: 3;
 }
+.hero-intro-block {
+  display: inline-flex; flex-direction: column;
+  align-items: flex-start;
+}
 .hero-intro-word {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(2.6rem, 9vw, 4.5rem);
   font-weight: 800; letter-spacing: -0.04em;
   line-height: 0.95; color: var(--navy);
-  text-align: left; white-space: nowrap;
-  width: auto;
+  white-space: nowrap;
 }
 .hero-intro-word.accent { color: var(--aqua); }
 
@@ -679,7 +682,7 @@ footer { padding:1rem; font-size:0.72rem; }
   .nav-cta { display:inline-flex; }
   .nav-hamburger { display:none; }
 
-  .hero-intro-word { font-size: clamp(4.5rem, 13vw, 10rem); text-align: left; width: auto; }
+  .hero-intro-word { font-size: clamp(4.5rem, 13vw, 10rem); }
 
   .hero-sticky { padding:0 2rem; }
   .hero-inner { grid-template-columns:1fr 1fr; gap:3rem; }
@@ -771,8 +774,10 @@ h2 { position: relative; display: inline-block; }
 
   <!-- FASE 1: testo schermo intero -->
   <div class="hero-intro" id="heroIntro">
-    <div class="hero-intro-word">WEB.</div>
-    <div class="hero-intro-word accent">SU MISURA</div>
+    <div class="hero-intro-block">
+      <div class="hero-intro-word">WEB.</div>
+      <div class="hero-intro-word accent">SU MISURA</div>
+    </div>
   </div>
 
 
