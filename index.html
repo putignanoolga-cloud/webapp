@@ -118,7 +118,8 @@ nav {
   line-height: 0.92; color: var(--navy);
   text-align: center; white-space: nowrap;
 }
-.hero-intro-word.accent { color: var(--aqua); }
+.hero-intro-word.accent { color: var(--aqua); display: inline-block; transform: rotate(-2deg); transform-origin: center; }
+.hero-intro-word .star { color: var(--aqua); font-size: 0.55em; vertical-align: super; margin-left: 0.1em; }
 
 /* Canvas lettere sparse */
 #letterCanvas {
@@ -651,7 +652,7 @@ h2 { position: relative; display: inline-block; }
 
   <!-- FASE 1: testo schermo intero -->
   <div class="hero-intro" id="heroIntro">
-    <div class="hero-intro-word">WEBSITE</div>
+    <div class="hero-intro-word">WEBSITE<span class="star">✦</span></div>
     <div class="hero-intro-word accent">SU MISURA</div>
   </div>
 
