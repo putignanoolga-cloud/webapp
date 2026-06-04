@@ -996,7 +996,7 @@ function initLetterScatter() {
     wordEl.innerHTML = '';
     [...wordEl.dataset.text].forEach(ch => {
       const span = document.createElement('span');
-      span.textContent = ch;
+      span.textContent = ch === ' ' ? ' ' : ch;
       span.style.cssText = 'display:inline-block;';
       wordEl.appendChild(span);
       charData.push({ span, fontSize, color, isSpace: ch === ' ' });
@@ -1009,38 +1009,53 @@ function initLetterScatter() {
     heroStickyEl.appendChild(_lCanvas);
 
     const W = window.innerWidth, H = window.innerHeight;
+    const pad = 60;
+    let minY = Infinity, maxY = -Infinity;
 
     charData.forEach(({ span, fontSize, color, isSpace }) => {
-      if (isSpace) return;
       const rect = span.getBoundingClientRect();
       if (!rect.width) return;
 
-      const pad = 80;
       const sx = pad + Math.random() * (W - pad * 2);
       const sy = pad + Math.random() * (H - pad * 2);
 
       const el = document.createElement('div');
       el.className = 'ltr';
       el.textContent = span.textContent;
-      el.style.fontSize = fontSize;
-      el.style.color    = color;
-      el.style.left     = rect.left + 'px';
-      el.style.top      = rect.top  + 'px';
+      el.style.fontSize  = fontSize;
+      el.style.color     = color;
+      el.style.left      = rect.left + 'px';
+      el.style.top       = rect.top  + 'px';
+      el.style.opacity   = isSpace ? '0' : '0.08';
       _lCanvas.appendChild(el);
-      _letters.push({ el, dx: sx - rect.left, dy: sy - rect.top });
+      _letters.push({ el, dx: sx - rect.left, dy: sy - rect.top, isSpace });
+
+      if (!isSpace) {
+        minY = Math.min(minY, rect.top);
+        maxY = Math.max(maxY, rect.top + rect.height);
+      }
     });
 
-    // Posizioni iniziali (sparse)
+    // Zoom dal centro esatto del blocco testo
+    const textCenterY = (minY + maxY) / 2;
+    _lCanvas.style.transformOrigin = `50% ${textCenterY}px`;
+
+    // Posiziona la tagline nel GAP tra le due righe
+    if (heroTagEl && isFinite(textCenterY)) {
+      heroTagEl.style.top    = textCenterY + 'px';
+      heroTagEl.style.bottom = 'auto';
+      heroTagEl.style.transform = 'translateY(-50%)';
+      heroTagEl.style.alignItems = 'center';
+    }
+
     setLetters(0);
   });
 }
 
 function setLetters(progress) {
-  _letters.forEach(({ el, dx, dy }) => {
-    const x = dx * (1 - progress);
-    const y = dy * (1 - progress);
-    el.style.transform = `translate(${x}px, ${y}px)`;
-    el.style.opacity   = (0.08 + progress * 0.92).toString();
+  _letters.forEach(({ el, dx, dy, isSpace }) => {
+    el.style.transform = `translate(${dx*(1-progress)}px, ${dy*(1-progress)}px)`;
+    if (!isSpace) el.style.opacity = (0.08 + progress * 0.92).toString();
   });
 }
 
