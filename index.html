@@ -199,7 +199,11 @@ nav {
 }
 .hero-circle-cta:hover .hcc-arrow { color: var(--white); }
 @media (max-width: 899px) {
-  .hero-circle-cta { right: 3%; width: 96px; height: 96px; }
+  .hero-circle-cta {
+    right: 1.2rem; bottom: 2rem; top: auto;
+    transform: scale(0);
+    width: 96px; height: 96px;
+  }
   .hcc-label { font-size: 0.56rem; }
   .hcc-arrow { font-size: 0.95rem; }
 }
@@ -1447,7 +1451,10 @@ function applyHero(p) {
   const circleP = eio(clp(p, 0.42, 0.56));
   if (_circleEl) {
     _circleEl.style.opacity      = circleP.toString();
-    _circleEl.style.transform    = `translateY(-50%) scale(${0.3 + circleP * 0.7})`;
+    const isMob = window.matchMedia('(max-width:899px)').matches;
+    _circleEl.style.transform = isMob
+      ? `scale(${0.3 + circleP * 0.7})`
+      : `translateY(-50%) scale(${0.3 + circleP * 0.7})`;
     _circleEl.style.pointerEvents = circleP > 0.5 ? 'auto' : 'none';
   }
 
