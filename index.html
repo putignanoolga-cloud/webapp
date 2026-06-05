@@ -148,6 +148,39 @@ nav {
   opacity: 0;
 }
 
+/* ── SCROLL HINT ── */
+.scroll-hint {
+  position: absolute; top: 2rem; right: 2rem; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  opacity: 1; transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.scroll-hint.hidden { opacity: 0; }
+.scroll-hint-mouse {
+  width: 22px; height: 34px; border: 2px solid rgba(44,26,14,0.3);
+  border-radius: 11px; position: relative;
+}
+.scroll-hint-mouse::after {
+  content: ''; position: absolute;
+  top: 5px; left: 50%; transform: translateX(-50%);
+  width: 3px; height: 7px; background: var(--aqua);
+  border-radius: 2px;
+  animation: scrollWheel 1.6s ease-in-out infinite;
+}
+@keyframes scrollWheel {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80%  { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+}
+.scroll-hint-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(44,26,14,0.35);
+}
+@media (max-width: 899px) {
+  .scroll-hint { top: 1.2rem; right: 1.2rem; }
+}
+
 /* ── HERO WATERMARK ── */
 .hero-watermark {
   position: absolute; inset: 0; z-index: 4;
@@ -831,6 +864,12 @@ h2 { position: relative; display: inline-block; }
  <div class="hero-sticky">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
+
+  <!-- SCROLL HINT -->
+  <div class="scroll-hint" id="scrollHint">
+    <div class="scroll-hint-mouse"></div>
+    <span class="scroll-hint-label">Scorri</span>
+  </div>
 
   <!-- WATERMARK + CIRCLE CTA -->
   <div class="hero-watermark" id="heroWatermark">
@@ -1637,6 +1676,15 @@ requestAnimationFrame(heroLoop);
   };
 
   updateLines(0);
+})();
+
+// ── SCROLL HINT ──
+(function() {
+  const hint = document.getElementById('scrollHint');
+  if (!hint) return;
+  window.addEventListener('scroll', () => {
+    hint.classList.toggle('hidden', window.scrollY > 40);
+  }, { passive: true });
 })();
 
 // ── HAMBURGER MENU ──
