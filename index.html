@@ -41,7 +41,7 @@ nav{
 nav.scrolled{box-shadow:0 4px 24px rgba(44,26,14,.1)}
 .nav-logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.03em;color:var(--navy);text-decoration:none}
 .nav-logo span{color:var(--aqua)}
-.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links{display:flex;flex-direction:row;gap:2.5rem;list-style:none;flex-wrap:nowrap}
 .nav-links a{font-size:.85rem;font-weight:500;color:rgba(44,26,14,.55);text-decoration:none;letter-spacing:.05em;transition:color .2s}
 .nav-links a:hover{color:var(--aqua)}
 .nav-cta{background:var(--navy);color:var(--white);padding:.55rem 1.4rem;border-radius:50px;font-size:.85rem;font-weight:700;text-decoration:none;letter-spacing:.02em;transition:transform .2s,box-shadow .2s}
@@ -325,11 +325,12 @@ footer{background:var(--dark);padding:3rem 2rem 2rem;border-top:1px solid rgba(4
 .footer-right{text-align:right;display:flex;flex-direction:column;gap:.4rem;justify-content:flex-end}
 .footer-copy{font-size:.75rem;color:rgba(44,26,14,.3)}
 
-/* ── RESPONSIVE BASE (mobile-first) ── */
+/* ── MOBILE (<900px) ── */
+@media(max-width:899px){
 nav{padding:1rem 1.2rem}
-.nav-links{display:none}
-.nav-cta{display:none}
-.nav-hamburger{display:flex}
+.nav-links{display:none!important}
+.nav-cta{display:none!important}
+.nav-hamburger{display:flex!important}
 .hero-sticky{padding:0 1.2rem}
 .hero-inner{grid-template-columns:1fr;gap:2rem}
 .hero-visual{display:none}
@@ -369,6 +370,7 @@ footer{padding:2rem 1rem 1.5rem}
 .ce-bar{width:92vw}
 .ce-body{width:92vw;min-height:260px;max-height:50vh}
 .ce-code{font-size:.72rem}
+} /* end @media max-width:899px */
 
 @media(min-width:600px){
   .services-grid{grid-template-columns:1fr 1fr}
@@ -980,7 +982,7 @@ function clp(t,a,b){return Math.max(0,Math.min(1,(t-a)/(b-a)))}
 
 // ── LETTER SCATTER ──
 let _letters=[],_lCanvas=null,_deco=[];
-const DECO_TOKENS=['<div>','</div>','<h1>','</h1>','<a href="#">','{ }','( )'=>','===','&&','||','const','let','return','async','.css','.js','.html','function','var','/*','*/','//','[]','""','++','!=','??'];
+const DECO_TOKENS=['<div>','</div>','<h1>','</h1>','<a href="#">','{ }','( )','⇒','===','&&','||','const','let','return','async','.css','.js','.html','function','var','/*','*/','//','[]','""','++','!=','??'];
 
 function initLetterScatter(){
   const wordEls=heroIntroEl.querySelectorAll('.hero-intro-word');
