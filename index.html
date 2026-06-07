@@ -331,6 +331,7 @@ nav{padding:1rem 1.2rem}
 .nav-links{display:none!important}
 .nav-cta{display:none!important}
 .nav-hamburger{display:flex!important}
+.nav-hamburger{flex-direction:column}
 .hero-sticky{padding:0 1.2rem}
 .hero-inner{grid-template-columns:1fr;gap:2rem}
 .hero-visual{display:none}
@@ -389,9 +390,10 @@ footer{padding:2rem 1rem 1.5rem}
 
 @media(min-width:900px){
   nav{padding:1rem 2rem}
-  .nav-links{display:flex}
-  .nav-cta{display:inline-flex}
-  .nav-hamburger{display:none}
+  .nav-links{display:flex!important;flex-direction:row!important;gap:2.5rem}
+  .nav-cta{display:inline-flex!important}
+  .nav-hamburger{display:none!important}
+  .nav-mobile-menu{display:none!important}
   .hero-intro-word{font-size:clamp(4.5rem,13vw,10rem)}
   .hero-sticky{padding:0 2rem}
   .hero-inner{grid-template-columns:1fr 1fr;gap:3rem}
